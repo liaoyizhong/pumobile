@@ -2,6 +2,7 @@
 
 namespace app\common\controller;
 
+use app\common\enums\HeaderStatus;
 use app\common\enums\ResponseCode;
 use app\common\enums\ResponseVersion;
 use \think\Controller as thinkController;
@@ -66,6 +67,7 @@ abstract class Basic extends thinkController
                 'msg' => '缺token',
                 'data' => []
             ];
+            http_response_code(HeaderStatus::FORBIDDEN);
             echo json_encode($array,true);exit;
         }
         $redis = new \think\cache\driver\Redis();
@@ -76,6 +78,7 @@ abstract class Basic extends thinkController
                 'msg' => '无效token',
                 'data' => []
             ];
+            http_response_code(HeaderStatus::FORBIDDEN);
             echo json_encode($array,true);exit;
         }
     }
