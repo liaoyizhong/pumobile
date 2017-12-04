@@ -54,28 +54,31 @@ class Residences extends BasicController
     {
         $json = file_get_contents("php://input");
         $params = json_decode($json, true);
-        if(!isset($params['main']['name']) || !isset($params['main']['region_id']) || !isset($params['main']['address']))
-        {
-            return $this->showResponse(ResponseCode::PARAMS_MISS, '缺必要参数',[],array("status"=>HeaderStatus::BADREQUEST,"version"=>ResponseVersion::V1));
+        $validate = $this->validate($params,'Residences');
+        if($validate !== TRUE){
+            return $this->showResponse(ResponseCode::PARAMS_INVALID,$validate,array(
+                "status"=>HeaderStatus::BADREQUEST));
         }
+
         return $this->execSave($params);
     }
 
     /**
-     * 显示指定的资源
+     * 通过regionId查找对应区域的楼盘
      *
      * @param  int $id
      * @return \think\Response
      */
     public function read($id)
     {
-        $logic = \think\Loader::model('\app\residences\logic\ResidencesLogic', "logic");
-        $model = $logic->get($id);
+        $logic = \think\Loader::model("ResidencesLogic", "logic");
+
+        $model = $logic->listMenu($id);
         if (!$model) {
-            return $this->showResponse(ResponseCode::DATA_MISS, '查不到该数据',[],array("status"=>HeaderStatus::NOTFOUND));
+            return $this->showResponse(ResponseCode::DATA_MISS, '查不到该数据',[],array('status'=>HeaderStatus::NOTFOUND));
         }
-        $data = $logic->getRow($model);
-        return $this->showResponse(ResponseCode::SUCCESS, '', $data);
+
+        return $this->showResponse(ResponseCode::SUCCESS, '', $model);
     }
 
     /**

@@ -134,20 +134,16 @@ class ResidencesLogic extends BasicLogic
         return $return;
     }
 
-    public function listMenu($params = [])
+    /**
+     * 通过regionId查找对应区域的楼盘
+     * @param $id
+     * @return array
+     */
+    public function listMenu($id)
     {
         $model = new ResidencesModel();
-
-        if (isset($params['where']['is_hidden'])) {
-            //这个model的分页有点奇怪它似乎独立于model这个对象
-            $list = $model->where('is_hidden', $params['where']['is_hidden'])
-                ->where('is_delete', 2)
-                ->select();
-        } else {
-            //这个model的分页有点奇怪它似乎独立于model这个对象
-            $list = $model->where('is_delete', 2)->select();
-        }
-        $return['list'] = array_map(function ($item) {
+        $list = $model->where('is_delete', 2)->where('region_id',$id)->select();
+        $return = array_map(function ($item) {
             return $this->menuRow($item);
         }, $list);
         return $return;
@@ -184,7 +180,7 @@ class ResidencesLogic extends BasicLogic
             }
         }
 
-        $return['total'] = $model->count();
+        $return['total'] = $model->where('is_delete', 2)->count();
         $return['per_page'] = isset($params['size']) ? $params['size'] : 1;
         $return['current_page'] = isset($params['page']) ? $params['page'] : 1;
         $return['last_page'] = isset($params['size']) && isset($params['page']) ? ceil($return['total'] / $return['per_page']) : 1;
@@ -271,5 +267,28 @@ class ResidencesLogic extends BasicLogic
         }
 
         return [$model->save(),'修改成功'];
+    }
+    
+    public function getDesignsMenu($id)
+    {
+        /** @var ResidencesModel $model */
+        $model = $this->get($id);
+        if(!$model){
+            return [FALSE,'没有数据'];
+        }
+        $designs = $model->designs;
+        $return = array_map(function($item){
+            return $this->designMenuRow($item);
+        },$designs);
+        return [TRUE,'',$return];
+    }
+
+    public function designMenuRow($model)
+    {
+        $return['name'] = $model->ridgepole?$model->ridgepole.'栋':'';
+        $return['name'] .= $model->cell?$model->cell.'单元':'';
+        $return['name'] .= $model->house_type?$model->house_type:'';
+        $return['id'] = $model->id;
+        return $return;
     }
 }

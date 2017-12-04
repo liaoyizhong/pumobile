@@ -52,4 +52,11 @@ class ResidencesDesignLogic extends BasicLogic
         }
         return TRUE;
     }
+
+    public function checkExists($id, $residencesId)
+    {
+        $model = new \app\residences\model\ResidencesDesignModel();
+        $row = $model->where('id',$id)->where('residences_id',$residencesId)->find();
+        return $row;
+    }
 }

@@ -4,6 +4,7 @@
  * User: I
  * Date: 2017/10/25
  * Time: 23:06
+ * 参考鲁班发现用的微信登录文件
  */
 
 namespace app\api\controller;

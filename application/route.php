@@ -13,7 +13,9 @@ return [
     'login/check' => ['users/login/check',['method'=>'post']],
     '__rest__'=>[
         'regions' => ['region/region'],
-        'residences' => ['residences/residences']
+        'residences' => ['residences/residences'],
+        'customers' => ['customer/customer'],
+        'residencesdesigns' => ['residences/ResidencesDesign']
     ],
     'residences/:id/designs' => ['residences/residences/designs',['method'=>'get'],['id'=>'\d+']],
 ];
