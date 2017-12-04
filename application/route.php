@@ -15,6 +15,7 @@ return [
         'regions' => ['region/region'],
         'residences' => ['residences/residences'],
         'customers' => ['customer/customer'],
+        'customers-records' => ['customer/CustomerRecord'],
         'residencesdesigns' => ['residences/ResidencesDesign']
     ],
     'residences/:id/designs' => ['residences/residences/designs',['method'=>'get'],['id'=>'\d+']],

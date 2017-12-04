@@ -10,5 +10,5 @@ use app\common\model\BasicModel;
 
 class CustomerModel extends BasicModel
 {
-    protected $table = 'customer';
+    protected $table = 'customers';
 }

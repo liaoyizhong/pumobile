@@ -3,7 +3,7 @@
 use think\migration\Migrator;
 use think\migration\db\Column;
 
-class CreateCustomer extends Migrator
+class CreateCustomersRecords extends Migrator
 {
     /**
      * Change Method.
@@ -28,16 +28,9 @@ class CreateCustomer extends Migrator
      */
     public function change()
     {
-        $this->table('customers')->setComment("客户信息")
-            ->addColumn('region_id','integer',["comment"=>"区域id"])
-            ->addColumn('residences_id','integer',["comment"=>"与residences关联"])
-            ->addColumn('design_id','integer',["comment"=>"与residences_design对应"])
-            ->addColumn('house_num','string',['limit'=>200,"comment"=>"房号"])
-            ->addColumn('family_name','string',['limit'=>100,"comment"=>"姓"])
-            ->addColumn('name','string',['limit'=>200,"comment"=>"名"])
-            ->addColumn('sex','integer')
-            ->addColumn('starttime','datetime',["comment"=>"施工开始日期"])
-            ->addColumn('endtime','datetime',["comment"=>"施工结束日期"])
+        $this->table('customers_records')->setComment("客户直播信息")
+            ->addColumn('customers_id','integer',["comment"=>"与customers表关联"])
+            ->addColumn('content','text',["comment"=>"文字内容"])
             ->addColumn('createtime','datetime',["default"=>"CURRENT_TIMESTAMP"])
             ->addColumn('updatetime','datetime',["default"=>"CURRENT_TIMESTAMP"])
             ->addColumn('is_delete','integer',["default"=>"2","comment"=>"1=>已经删除,2=>没有删除"])
