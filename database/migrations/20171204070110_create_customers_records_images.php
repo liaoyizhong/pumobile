@@ -31,6 +31,7 @@ class CreateCustomersRecordsImages extends Migrator
         $this->table('customers_records_images')->setComment("客户直播信息图片")
             ->addColumn('customers_records_id','integer',["comment"=>"与customers_records表关联"])
             ->addColumn('image_hash_code','text',["comment"=>"图片hash_code值"])
+            ->addColumn('order_num','integer',['comment'=>'对应同一个record的排序id'])
             ->addColumn('is_delete','integer',["default"=>"2","comment"=>"1=>已经删除,2=>没有删除"])
             ->save();
     }

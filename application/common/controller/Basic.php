@@ -15,6 +15,8 @@ use \think\Controller as thinkController;
 abstract class Basic extends thinkController
 {
     private $userId;
+    const METHODPOST = 'post';
+    const METHODPUT = 'put';
 
     public function showResponse($code = ResponseCode::SUCCESS, $message = '', $data = array(),$header = array())
     {
@@ -80,6 +82,20 @@ abstract class Basic extends thinkController
             ];
             http_response_code(HeaderStatus::FORBIDDEN);
             echo json_encode($array,true);exit;
+        }
+    }
+
+    public function getParams($method)
+    {
+        switch($method){
+            case self::METHODPOST:
+                $json = file_get_contents("php://input");
+                $params = json_decode($json, true);
+                return $params;
+                breack;
+            case self::METHODPUT:
+                return $this->request->put();
+                break;
         }
     }
 }

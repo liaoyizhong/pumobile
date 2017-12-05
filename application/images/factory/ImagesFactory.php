@@ -10,10 +10,10 @@ class ImagesFactory
 {
     /**
      *  用BasicInterface做限制，用ImagesFactory做类创建，这样就可以快速切换实现类,比如下面的AliServie
-     * @return \app\images\services\AliService object
+     * @return \app\images\service\AliService object
      */
     public static function createImage()
     {
-        return \think\Loader::model('\app\images\services\AliService','services');
+        return \think\Loader::model('\app\images\service\AliService','services');
     }
 }

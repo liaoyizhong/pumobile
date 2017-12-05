@@ -20,5 +20,5 @@ class ResponseCode
     const DATA_MISS = 4001; //查不到数据
     const DATA_ERROR = 4002; //数据执行出错
 
-    const CLASS_EXISTS = 5001; //这个类不存在
+    const CLASS_EXISTS = 5001; //类不存在
 }
