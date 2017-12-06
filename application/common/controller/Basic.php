@@ -18,7 +18,16 @@ abstract class Basic extends thinkController
     const METHODPOST = 'post';
     const METHODPUT = 'put';
 
-    public function showResponse($code = ResponseCode::SUCCESS, $message = '', $data = array(),$header = array())
+    /**
+     * @param int $code
+     * @param string $message
+     * @param array $data
+     * @param array $header   配置参数
+     *                            status:header返回状态,
+     *                            version:版本信息,
+     * @return \think\response\Json
+     */
+    public function showResponse($code = ResponseCode::SUCCESS, $message = '', $data = array(), $header = array())
     {
         if(isset($data['list'])){
             $array['err_code'] = $code;
@@ -92,10 +101,8 @@ abstract class Basic extends thinkController
                 $json = file_get_contents("php://input");
                 $params = json_decode($json, true);
                 return $params;
-                breack;
             case self::METHODPUT:
                 return $this->request->put();
-                break;
         }
     }
 }

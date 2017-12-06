@@ -1,0 +1,222 @@
+array(2) {
+  [0]=>
+  object(app\customer\model\CustomerRecordModel)#17 (34) {
+    ["table":protected]=>
+    string(17) "customers_records"
+    ["connection":protected]=>
+    array(0) {
+    }
+    ["parent":protected]=>
+    NULL
+    ["query":protected]=>
+    NULL
+    ["name":protected]=>
+    string(19) "CustomerRecordModel"
+    ["class":protected]=>
+    string(38) "app\customer\model\CustomerRecordModel"
+    ["error":protected]=>
+    NULL
+    ["validate":protected]=>
+    NULL
+    ["pk":protected]=>
+    NULL
+    ["field":protected]=>
+    array(0) {
+    }
+    ["except":protected]=>
+    array(0) {
+    }
+    ["disuse":protected]=>
+    array(0) {
+    }
+    ["readonly":protected]=>
+    array(0) {
+    }
+    ["visible":protected]=>
+    array(0) {
+    }
+    ["hidden":protected]=>
+    array(0) {
+    }
+    ["append":protected]=>
+    array(0) {
+    }
+    ["data":protected]=>
+    array(6) {
+      ["id"]=>
+      int(23)
+      ["customers_id"]=>
+      int(4)
+      ["content"]=>
+      string(219) "张萨新闻客户端,激发每个人思考。...盖楼作诗,槽点犀利, 来网易跟贴,   写出你的态度我们激发每个人思考,   态度就在你身上定制化阅读更懂你的新闻资讯APP智能推送"
+      ["createtime"]=>
+      string(19) "2017-12-06 09:43:27"
+      ["updatetime"]=>
+      string(19) "2017-12-06 09:43:27"
+      ["is_delete"]=>
+      int(2)
+    }
+    ["origin":protected]=>
+    array(6) {
+      ["id"]=>
+      int(23)
+      ["customers_id"]=>
+      int(4)
+      ["content"]=>
+      string(219) "张萨新闻客户端,激发每个人思考。...盖楼作诗,槽点犀利, 来网易跟贴,   写出你的态度我们激发每个人思考,   态度就在你身上定制化阅读更懂你的新闻资讯APP智能推送"
+      ["createtime"]=>
+      string(19) "2017-12-06 09:43:27"
+      ["updatetime"]=>
+      string(19) "2017-12-06 09:43:27"
+      ["is_delete"]=>
+      int(2)
+    }
+    ["relation":protected]=>
+    array(0) {
+    }
+    ["auto":protected]=>
+    array(0) {
+    }
+    ["insert":protected]=>
+    array(0) {
+    }
+    ["update":protected]=>
+    array(0) {
+    }
+    ["autoWriteTimestamp":protected]=>
+    bool(false)
+    ["createTime":protected]=>
+    string(11) "create_time"
+    ["updateTime":protected]=>
+    string(11) "update_time"
+    ["dateFormat":protected]=>
+    string(11) "Y-m-d H:i:s"
+    ["type":protected]=>
+    array(0) {
+    }
+    ["isUpdate":protected]=>
+    bool(true)
+    ["updateWhere":protected]=>
+    NULL
+    ["failException":protected]=>
+    bool(false)
+    ["useGlobalScope":protected]=>
+    bool(true)
+    ["batchValidate":protected]=>
+    bool(false)
+    ["resultSetType":protected]=>
+    string(5) "array"
+    ["relationWrite":protected]=>
+    NULL
+  }
+  [1]=>
+  object(app\customer\model\CustomerRecordModel)#16 (34) {
+    ["table":protected]=>
+    string(17) "customers_records"
+    ["connection":protected]=>
+    array(0) {
+    }
+    ["parent":protected]=>
+    NULL
+    ["query":protected]=>
+    NULL
+    ["name":protected]=>
+    string(19) "CustomerRecordModel"
+    ["class":protected]=>
+    string(38) "app\customer\model\CustomerRecordModel"
+    ["error":protected]=>
+    NULL
+    ["validate":protected]=>
+    NULL
+    ["pk":protected]=>
+    NULL
+    ["field":protected]=>
+    array(0) {
+    }
+    ["except":protected]=>
+    array(0) {
+    }
+    ["disuse":protected]=>
+    array(0) {
+    }
+    ["readonly":protected]=>
+    array(0) {
+    }
+    ["visible":protected]=>
+    array(0) {
+    }
+    ["hidden":protected]=>
+    array(0) {
+    }
+    ["append":protected]=>
+    array(0) {
+    }
+    ["data":protected]=>
+    array(6) {
+      ["id"]=>
+      int(1)
+      ["customers_id"]=>
+      int(1)
+      ["content"]=>
+      string(212) "4新闻客户端,激发每个人思考。... 盖楼作诗,槽点犀利,来网易跟贴,写出你的态度 我们激发每个人思考,态度就在你身上 定制化阅读 更懂你的新闻资讯APP 智能推送"
+      ["createtime"]=>
+      string(19) "2017-12-05 10:51:51"
+      ["updatetime"]=>
+      string(19) "2017-12-05 10:51:51"
+      ["is_delete"]=>
+      int(2)
+    }
+    ["origin":protected]=>
+    array(6) {
+      ["id"]=>
+      int(1)
+      ["customers_id"]=>
+      int(1)
+      ["content"]=>
+      string(212) "4新闻客户端,激发每个人思考。... 盖楼作诗,槽点犀利,来网易跟贴,写出你的态度 我们激发每个人思考,态度就在你身上 定制化阅读 更懂你的新闻资讯APP 智能推送"
+      ["createtime"]=>
+      string(19) "2017-12-05 10:51:51"
+      ["updatetime"]=>
+      string(19) "2017-12-05 10:51:51"
+      ["is_delete"]=>
+      int(2)
+    }
+    ["relation":protected]=>
+    array(0) {
+    }
+    ["auto":protected]=>
+    array(0) {
+    }
+    ["insert":protected]=>
+    array(0) {
+    }
+    ["update":protected]=>
+    array(0) {
+    }
+    ["autoWriteTimestamp":protected]=>
+    bool(false)
+    ["createTime":protected]=>
+    string(11) "create_time"
+    ["updateTime":protected]=>
+    string(11) "update_time"
+    ["dateFormat":protected]=>
+    string(11) "Y-m-d H:i:s"
+    ["type":protected]=>
+    array(0) {
+    }
+    ["isUpdate":protected]=>
+    bool(true)
+    ["updateWhere":protected]=>
+    NULL
+    ["failException":protected]=>
+    bool(false)
+    ["useGlobalScope":protected]=>
+    bool(true)
+    ["batchValidate":protected]=>
+    bool(false)
+    ["resultSetType":protected]=>
+    string(5) "array"
+    ["relationWrite":protected]=>
+    NULL
+  }
+}

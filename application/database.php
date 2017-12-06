@@ -24,7 +24,7 @@ return [
     // 密码
 //    'password'        => '#abdc112@)',
     'password'        => '123456',
-//    'password'        => '#123(~1120abc',
+//    'password'        => '#123(~1120abc', //错误
     // 端口
     'hostport'        => '',
     // 连接dsn

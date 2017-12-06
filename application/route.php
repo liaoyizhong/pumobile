@@ -14,8 +14,8 @@ return [
     '__rest__'=>[
         'regions' => ['region/region'], //区域
         'residences' => ['residences/residences'], //楼盘
-        'customers' => ['customer/customer'], //客户信息
-        'customers-records' => ['customer/CustomerRecord'], //直播信息
+        'customers' => ['customers/customers'], //客户信息
+        'customers-records' => ['customers/CustomersRecords'], //直播信息
         'residencesdesigns' => ['residences/ResidencesDesign'], //设计户型
         'images' => 'images/images' //图片
     ],

@@ -114,7 +114,6 @@ class Sms
             }
 
         } catch (ClientException $e) {
-            echo '<pre>';var_dump( $e->getErrorMessage());echo '</pre>';exit();
             throw new SmsException([
                 'errorCode' => $e->getErrorCode(),
                 'msg' => $e->getErrorMessage()
