@@ -21,11 +21,10 @@ use think\Config;
 
 class Sms
 {
-
-    private $accessKeyId = '';
-    private $accessKeySecret = '';
-    private $signName = '';
-    private $expires_in = 0;
+    private $accessKeyId = 'LTAIpCW8S0GeNmeG';
+    private $accessKeySecret = 'gugmHxKPk4R5pbMN0dbHAi6d2iqq2P';
+    private $signName = '鲁班发现';
+    private $expires_in = 60*15;
     private $resendTime = 60;
 
     /**
@@ -36,11 +35,11 @@ class Sms
      */
     public function __construct()
     {
-        $this->accessKeyId = Config::get('sms.access_key_id');
+/*        $this->accessKeyId = Config::get('sms.access_key_id');
         $this->accessKeySecret = Config::get('sms.access_key_secret');
         $this->signName = Config::get('sms.sign_name');
         $this->expires_in = (int)Config::get('sms.expires_in');
-        $this->resendTime = (int)Config::get('sms.resend_time');
+        $this->resendTime = (int)Config::get('sms.resend_time');*/
     }
 
     private function _init()
@@ -83,7 +82,7 @@ class Sms
         try {
             // 初始化SendSmsRequest实例用于设置发送短信的参数
             $request = new SendSmsRequest();
-
+            
             // 必填，设置雉短信接收号码
             $request->setPhoneNumbers($phoneNumbers);
 

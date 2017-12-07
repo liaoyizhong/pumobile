@@ -96,13 +96,14 @@ class CustomersLogic extends BasicLogic
             $records = $value->records;
             if(count($records)){
                 $createTime = end($records)->createtime;
-                $return[$key]['last_release'] = ceil((time()-strtotime($createTime))/86400);
+                $design = $value->desgin;
+                $return[$key]['house_name'] = $design['ridgepole'].'栋'.$design['cell'].'单元'.$design['house_type'];
+                $return[$key]['name'] = $value['family_name'].$value['name'];
+                $return[$key][''] = $value;
+                $return[$key]['last_release_text'] = ceil((time()-strtotime($createTime))/86400).'天前';
             }
-
-
         }
-
-
+        return $return;
     }
 
     public function read($id)

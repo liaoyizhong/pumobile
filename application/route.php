@@ -17,7 +17,8 @@ return [
         'customers' => ['customers/customers'], //客户信息
         'customers-records' => ['customers/CustomersRecords'], //直播信息
         'residencesdesigns' => ['residences/ResidencesDesign'], //设计户型
-        'images' => 'images/images' //图片
+        'images' => 'images/images', //图片
+        'logins' => 'users/login'
     ],
     'residences/:id/designs' => ['residences/residences/designs',['method'=>'get'],['id'=>'\d+']],
     'sms' => ['test/test/smsTest',['method'=>'get'],['id'=>'\d+']]

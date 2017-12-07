@@ -30,8 +30,9 @@ class CreateCustomer extends Migrator
     {
         $this->table('customers')->setComment("客户信息")
             ->addColumn('region_id','integer',["comment"=>"区域id"])
-            ->addColumn('residences_id','integer',["comment"=>"与residences关联"])
-            ->addColumn('design_id','integer',["comment"=>"与residences_design对应"])
+            ->addColumn('residence_id','integer',["comment"=>"与residences关联"])
+            ->addColumn('design_id','integer',["comment"=>"与residences_design关联"])
+            ->addColumn('manager_id','integer',["comment"=>"与mangers关联"])
             ->addColumn('house_num','string',['limit'=>200,"comment"=>"房号"])
             ->addColumn('family_name','string',['limit'=>100,"comment"=>"姓"])
             ->addColumn('name','string',['limit'=>200,"comment"=>"名"])

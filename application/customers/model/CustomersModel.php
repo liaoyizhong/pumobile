@@ -21,4 +21,9 @@ class CustomersModel extends BasicModel
     {
         return $this->hasOne('\app\residences\model\ResidencesModel','residences_id','id');
     }
+
+    public function desgin()
+    {
+        return $this->hasOne('\app\residences\model\ResidencesDesignModel','id','design_id');
+    }
 }

@@ -35,8 +35,7 @@ class login extends BasicController
      */
     public function save()
     {
-        $json = file_get_contents("php://input");
-        $params = json_decode($json, true);
+        $params = $this->getParams(self::METHODPOST);
         $result = $this->validate($params,'User');
         if($result !== TRUE){
             return $this->showResponse(ResponseCode::UNKNOW_ERROR,$result,'',array('status'=> HeaderStatus::BADREQUEST,'version'=>ResponseVersion::V1));

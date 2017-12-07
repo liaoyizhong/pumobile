@@ -12,5 +12,6 @@ class SmsTemplateEnum
 {
     const SMS_REGISTER_TEMPLATE_CODE = 'SMS_93780052'; // 注册短信模板  鲁班发现的模板
     const SMS_FORGET_TEMPLATE_CODE = 'SMS_93780051'; // 忘记密码短信模板 鲁班发现的模板
+    const CODESMS_LOGIN = 'CODESMS_38990063';//登录
 
 }

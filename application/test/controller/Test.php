@@ -32,14 +32,14 @@ class Test extends BasicController
         echo $signedUrl;
     }
 
-
     public function smsTest()
     {
         $sms = new FrontEndSms();
-        $result = $sms->sendCommonSms('18027626081',
-            SmsTemplateEnum::SMS_REGISTER_TEMPLATE_CODE);
-        if(empty($result)){
-            echo '<pre>';var_dump($result);echo '</pre>';exit();
+        $result = $sms->sendCommonSms('180276260812',
+            SmsTemplateEnum::CODESMS_LOGIN);
+
+        if(!$result){
+
         }
         return json('', 201);
     }

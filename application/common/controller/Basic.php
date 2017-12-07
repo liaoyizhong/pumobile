@@ -6,6 +6,7 @@ use app\common\enums\HeaderStatus;
 use app\common\enums\ResponseCode;
 use app\common\enums\ResponseVersion;
 use \think\Controller as thinkController;
+use think\Loader;
 
 /**
  * User: liaoyizhong
@@ -67,12 +68,22 @@ abstract class Basic extends thinkController
         return json($array,$status,$header);
     }
 
+    protected function _initialize()
+    {
+        $this->adminToken = Loader::model('AdminToken','service');
+    }
+
+
     /**
      *  检查登录
      */
     public function checkLogin()
     {
-        if (!isset($_SERVER['HTTP_TOKEN'])) {
+        $this->lastToken = $this->adminToken->verifyToken();
+        echo '<pre>';var_dump($this->lastToken);echo '</pre>';exit();
+        $this->adminUid = $this->lastToken['uid'];
+        $this->adminUsername = $this->lastToken['username'];
+ /*       if (!isset($_SERVER['HTTP_TOKEN'])) {
             $array = [
                 'err_code' => ResponseCode::PARAMS_MISS,
                 'msg' => '缺token',
@@ -91,7 +102,7 @@ abstract class Basic extends thinkController
             ];
             http_response_code(HeaderStatus::FORBIDDEN);
             echo json_encode($array,true);exit;
-        }
+        }*/
     }
 
     public function getParams($method)
