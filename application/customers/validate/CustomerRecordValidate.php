@@ -6,9 +6,6 @@ namespace app\customers\validate;
  * Time: 15:42
  */
 
-namespace app\customer\validate;
-
-
 class CustomerRecordValidate extends \think\Validate
 {
     protected $rule = [

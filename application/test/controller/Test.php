@@ -38,10 +38,10 @@ class Test extends BasicController
         $result = $sms->sendCommonSms('180276260812',
             SmsTemplateEnum::CODESMS_LOGIN);
 
-        if(!$result){
-
+        if(!$result[0]){
+            echo '<pre>';var_dump(2);echo '</pre>';exit();
         }
-        return json('', 201);
+        echo '<pre>';var_dump(1);echo '</pre>';exit();
     }
 
     public function checkSms()

@@ -173,23 +173,17 @@ class Sms
         if (!$code) {   //判断是否在规定时间内重复发送
             if ($isExisit) {
                 if ($cache['times'] > time()) {
-                    throw new SmsException([
-                        'msg' => '您发送短信频率过快',
-                        'errorCode' => '1015'
-                    ]);
+                    return [FALSE,'您发送短信频率过快'];
                 }
             }
-            return true;
+            return [true];
         } else {  //判断验证码是否输入正确
             if ($isExisit) {
                 if ($cache['code'] == $code) {
-                    return true;
+                    return [true];
                 }
             }
-            throw new SmsException([
-                'msg' => '短信验证码错误或已过期',
-                'errorCode' => '1016'
-            ]);
+            return [FALSE,'短信验证码错误或已过期'];
         }
     }
 }

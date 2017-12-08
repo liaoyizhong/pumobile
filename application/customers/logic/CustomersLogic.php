@@ -3,6 +3,7 @@ namespace app\customers\logic;
 use app\common\logic\BasicLogic;
 use app\customers\model\CustomersModel;
 use app\customers\model\CustomersRecordsModel;
+use think\Cache;
 
 /**
  * User: liaoyizhong
@@ -21,10 +22,13 @@ class CustomersLogic extends BasicLogic
 
     public function save($params)
     {
+        //获取操作员信息
+        $json = Cache::get($_SERVER['HTTP_TOKEN']);
+        $arr = json_decode($json, true);
         try{
             $model = new CustomersModel();
             $model->region_id = $params['region_id'];
-            $model->residences_id = $params['residences_id'];
+            $model->residence_id = $params['residences_id'];
             $model->design_id = $params['design_id'];
             $model->house_num = $params['house_num'];
             $model->family_name = $params['family_name'];
@@ -32,6 +36,8 @@ class CustomersLogic extends BasicLogic
             $model->sex = $params['sex'];
             $model->starttime = $params['starttime'];
             $model->endtime = $params['endtime'];
+            $model->phone = $params['phone'];
+            $model->manager_id = $arr['user_id'];
             $time = date("Y-m-d H:i:s");
             $model->createtime = $time;
             $model->updatetime = $time;

@@ -20,7 +20,10 @@ class FrontEndSms extends Sms
      */
     public function sendCommonSms($phoneNumbers, $template_code = SmsTemplateEnum::SMS_REGISTER_TEMPLATE_CODE)
     {
-        $this->verifyCode($phoneNumbers);
+        $check = $this->verifyCode($phoneNumbers);
+        if(!$check[0]){
+            return [FALSE,$check[1]];
+        }
 
         $code = $this->createVerifyCode(); // 生成code
         $templateParam = [
@@ -28,11 +31,9 @@ class FrontEndSms extends Sms
             'product' => '小噗家'
 
         ];
-        
+
         // 插入短信日志
-
         $result = $this->sendSms($template_code, $phoneNumbers, $templateParam);
-
-        return $result;
+        return [$result,'发送失败'];
     }
 }

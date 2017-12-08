@@ -11,9 +11,14 @@ use app\common\controller\Basic;
 use app\common\enums\HeaderStatus;
 use app\common\enums\ResponseCode;
 use app\customers\model\CustomersRecordsModel as RecordModel;
+use think\Db;
+use think\Loader;
 
 class CustomersRecords extends Basic
 {
+    protected $beforeActionList = [
+        'checkManagerLogin'
+    ];
     /**
      * 保存新建的资源
      *
@@ -28,16 +33,16 @@ class CustomersRecords extends Basic
 
         $record['customers_id'] = $params['customers_id'];
         $record['content'] = $params['content'];
-        $logic = \think\Loader::model('CustomersRecordsLogic','logic');
+        $logic = Loader::model('CustomersRecordsLogic','logic');
         try{
-            \think\Db::startTrans();
+            Db::startTrans();
             if(!$newId = $logic->save($record)){
-                \think\Db::rollback();
+                Db::rollback();
                 return $this->showResponse(ResponseCode::UNKNOW_ERROR,'保存失败',[],array('status'=>HeaderStatus::UNPROCESABLEENTITY));
             }
 
             if(isset($params['pic_hash_code']) && count($params['pic_hash_code'])){
-                $imageLogic = \think\Loader::model('\app\customer\logic\CustomersRecordsImagesLogic','logic');
+                $imageLogic = Loader::model('CustomersRecordsImagesLogic','logic');
                 $imageParams = [];
                 foreach ($params['pic_hash_code'] as $key=>$value){
                     $imageParams[$key]['image_hash_code'] = $value['hash_code'];
@@ -45,11 +50,11 @@ class CustomersRecords extends Basic
                     $imageParams[$key]['order_num'] = $key;
                 }
                 $imageLogic->saveAll($imageParams);
-                \think\Db::commit();
+                Db::commit();
                 return $this->showResponse(ResponseCode::SUCCESS,'保存成功',[],array('status'=>HeaderStatus::SUCCESS));
             }
         }catch (\exception $e){
-            \think\rollback();
+            Db::rollback();
             return $this->showResponse(ResponseCode::UNKNOW_ERROR,'保存失败',[],array('status'=>HeaderStatus::NOTFOUND));
         }
     }
@@ -72,7 +77,7 @@ class CustomersRecords extends Basic
             $model->save($updateParams);
             if (isset($params['pic_hash_code']) && count($params['pic_hash_code'])) {
                 //先删除之前的图片
-                $imageLogic = \think\Loader::model('\app\customer\logic\CustomersRecordsImagesLogic', 'logic');
+                $imageLogic = Loader::model('CustomersRecordsImagesLogic', 'logic');
                 $imageLogic->cleanUp($id);
                 $imageParams = [];
                 foreach ($params['pic_hash_code'] as $key => $value) {
@@ -81,11 +86,11 @@ class CustomersRecords extends Basic
                     $imageParams[$key]['order_num'] = $key;
                 }
                 $imageLogic->saveAll($imageParams);
-                \think\Db::commit();
+                Db::commit();
                 return $this->showResponse(ResponseCode::SUCCESS, '保存成功', [], array('status' => HeaderStatus::SUCCESS));
             }
         }catch (\exception $e){
-            \think\rollback();
+            Db::rollback();
             return $this->showResponse(ResponseCode::UNKNOW_ERROR,'保存失败',[],array('status'=>HeaderStatus::NOTFOUND));
         }
     }

@@ -5,6 +5,8 @@ namespace app\common\controller;
 use app\common\enums\HeaderStatus;
 use app\common\enums\ResponseCode;
 use app\common\enums\ResponseVersion;
+use app\managers\model\ManagersModel;
+use think\Cache;
 use \think\Controller as thinkController;
 use think\Loader;
 
@@ -16,9 +18,10 @@ use think\Loader;
 abstract class Basic extends thinkController
 {
     private $userId;
+    private $role;
+
     const METHODPOST = 'post';
     const METHODPUT = 'put';
-
     /**
      * @param int $code
      * @param string $message
@@ -75,15 +78,11 @@ abstract class Basic extends thinkController
 
 
     /**
-     *  检查登录
+     *  检查manager登录
      */
-    public function checkLogin()
+    public function checkManagerLogin()
     {
-        $this->lastToken = $this->adminToken->verifyToken();
-        echo '<pre>';var_dump($this->lastToken);echo '</pre>';exit();
-        $this->adminUid = $this->lastToken['uid'];
-        $this->adminUsername = $this->lastToken['username'];
- /*       if (!isset($_SERVER['HTTP_TOKEN'])) {
+        if (!isset($_SERVER['HTTP_TOKEN'])) {
             $array = [
                 'err_code' => ResponseCode::PARAMS_MISS,
                 'msg' => '缺token',
@@ -92,8 +91,30 @@ abstract class Basic extends thinkController
             http_response_code(HeaderStatus::FORBIDDEN);
             echo json_encode($array,true);exit;
         }
-        $redis = new \think\cache\driver\Redis();
-        $this->userId = $redis->get($_SERVER['HTTP_TOKEN']);
+        
+        $userInfo = Cache::get($_SERVER['HTTP_TOKEN']);
+        if(!$userInfo){
+            $array = [
+                'err_code' => ResponseCode::DATA_MISS,
+                'msg' => '没有登录',
+                'data' => []
+            ];
+            http_response_code(HeaderStatus::UNAUTHORIZED);
+            echo json_encode($array,true);exit;
+        }
+
+        $this->userId = $userInfo['user_id'];
+        $this->role = $userInfo['role'];
+        if($this->role != ManagersModel::ROLEMANAGER){
+            $array = [
+                'err_code' => ResponseCode::DATA_MISS,
+                'msg' => '没有权限',
+                'data' => []
+            ];
+            http_response_code(HeaderStatus::UNAUTHORIZED);
+            echo json_encode($array,true);exit;
+        }
+
         if (!$this->userId) {
             $array = [
                 'err_code' => ResponseCode::DATA_MISS,
@@ -102,7 +123,46 @@ abstract class Basic extends thinkController
             ];
             http_response_code(HeaderStatus::FORBIDDEN);
             echo json_encode($array,true);exit;
-        }*/
+        }
+    }
+
+    /**
+     *  检查customer登录
+     */
+    public function checkCustmoerLogin()
+    {
+        if (!isset($_SERVER['HTTP_TOKEN'])) {
+            $array = [
+                'err_code' => ResponseCode::PARAMS_MISS,
+                'msg' => '缺token',
+                'data' => []
+            ];
+            http_response_code(HeaderStatus::FORBIDDEN);
+            echo json_encode($array,true);exit;
+        }
+
+        $json = Cache::get($_SERVER['HTTP_TOKEN']);
+        $arr = json_decode($json, true);
+        $this->userId = $arr['user_id'];
+        $this->role = $arr['role'];
+        if($this->role != ManagersModel::ROLECUSTOMER){
+            $array = [
+                'err_code' => ResponseCode::DATA_MISS,
+                'msg' => '没有权限',
+                'data' => []
+            ];
+            http_response_code(HeaderStatus::UNAUTHORIZED);
+            echo json_encode($array,true);exit;
+        }
+        if (!$this->userId) {
+            $array = [
+                'err_code' => ResponseCode::DATA_MISS,
+                'msg' => '无效token',
+                'data' => []
+            ];
+            http_response_code(HeaderStatus::FORBIDDEN);
+            echo json_encode($array,true);exit;
+        }
     }
 
     public function getParams($method)

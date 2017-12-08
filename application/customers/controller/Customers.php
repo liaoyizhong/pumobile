@@ -3,6 +3,7 @@ namespace app\customers\controller;
 use app\common\controller\Basic;
 use app\common\enums\HeaderStatus;
 use app\common\enums\ResponseCode;
+use think\Loader;
 
 /**
  * User: liaoyizhong
@@ -12,6 +13,9 @@ use app\common\enums\ResponseCode;
 
 class Customers extends Basic
 {
+    protected $beforeActionList = [
+        'checkManagerLogin' => ['only'=>'save']
+    ];
     /**
      * @return \think\response\Json
      */
@@ -22,13 +26,13 @@ class Customers extends Basic
         if($check !== TRUE) {
             return $this->showResponse(ResponseCode::UNKNOW_ERROR, $check, [], array("status" => HeaderStatus::BADREQUEST));
         }
-        $logic = \think\Loader::model('\app\residences\logic\ResidencesDesignLogic','logic');
+        $logic = Loader::model('\app\residences\logic\ResidencesDesignLogic','logic');
         $result = $logic->checkExists($params['design_id'],$params['residences_id']);
         if(!$result){
             return $this->showResponse(ResponseCode::UNKNOW_ERROR, '户型与楼盘不对应',[],array("status"=>HeaderStatus::BADREQUEST));
         }
-        $logic = \think\Loader::model('CustomersLogic','logic');
-        $result = $logic->save($params);
+        $customersLogic = Loader::model('CustomersLogic','logic');
+        $result = $customersLogic->save($params);
         if($result[0]){
             return $this->showResponse(ResponseCode::SUCCESS,$result[1],[],array("status" => HeaderStatus::SUCCESS));
         }else{
@@ -41,7 +45,7 @@ class Customers extends Basic
     {
         $params['size'] = $this->request->get('size');
         $params['page'] = $this->request->get('page');
-        $logic = \think\Loader::model('CustomersLogic','logic');
+        $logic = Loader::model('CustomersLogic','logic');
         try{
             $lists = $logic->customerList($params);
         }catch (\exception $e){
@@ -57,7 +61,7 @@ class Customers extends Basic
 
     public function delete($id)
     {
-        $logic = \think\Loader::model('CustomersLogic','logic');
+        $logic = Loader::model('CustomersLogic','logic');
         $result = $logic->delete($id);
         if($result[0]){
             return $this->showResponse(ResponseCode::SUCCESS,$result[1],'',array('status'=>HeaderStatus::SUCCESS));
