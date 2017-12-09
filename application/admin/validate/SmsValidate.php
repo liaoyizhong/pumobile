@@ -14,8 +14,8 @@ use think\Validate;
  */
 class SmsValidate extends Validate
 {
-    const TYPEMANAGER = 1;
-    const TYPECUSTOMER = 2;
+    const TYPEMANAGER = 1;  //管理员
+    const TYPECUSTOMER = 2; //客户
 
     protected $rule = [
         'phone' => 'require',
