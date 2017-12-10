@@ -12,4 +12,9 @@ use app\common\model\BasicModel;
 class CustomersRecordsModel extends BasicModel
 {
     protected $table = 'customers_records';
+
+    public function images()
+    {
+        return $this->hasMany('CustomersRecordsImagesModel','customers_records_id','id');
+    }
 }

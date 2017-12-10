@@ -20,6 +20,7 @@ abstract class Basic extends thinkController
 {
     protected $userId;
     protected $role;
+    protected $phone;
 
     const METHODPOST = 'post';
     const METHODPUT = 'put';
@@ -143,10 +144,10 @@ abstract class Basic extends thinkController
             echo json_encode($array,true);exit;
         }
 
-        $json = Cache::get($_SERVER['HTTP_TOKEN']);
-        $arr = json_decode($json, true);
+        $arr = Cache::get($_SERVER['HTTP_TOKEN']);
         $this->userId = $arr['user_id'];
         $this->role = $arr['role'];
+        $this->phone = $arr['phone'];
         if($this->role != LoginRole::ROLECUSTOMER){
             $array = [
                 'err_code' => ResponseCode::DATA_MISS,

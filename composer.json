@@ -20,7 +20,8 @@
         "topthink/framework": "~5.0.0",
         "overtrue/wechat":"~3.1",
         "topthink/think-migration": "^1.1",
-        "firebase/php-jwt":"dev-master"
+        "firebase/php-jwt":"dev-master",
+        "aliyuncs/oss-sdk-php": "~2.0"
     },
     "autoload": {
         "psr-4": {

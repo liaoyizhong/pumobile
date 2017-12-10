@@ -62,9 +62,15 @@ class Customers extends Basic
 
     public function listProcess()
     {
-
+        $params['phone'] = $this->phone;
         $logic = Loader::model('CustomersLogic','logic');
-        $logic->listByResidences();
+
+        try{
+            $result = $logic->listByResidences($params);
+        }catch (\exception $e){
+            return $this->showResponse(ResponseCode::UNKNOW_ERROR,'读取失败',[],array('status'=>HeaderStatus::BADREQUEST));
+        }
+        return $this->showResponse(ResponseCode::SUCCESS,'读取成功',$result,array('status'=>HeaderStatus::SUCCESS));
     }
 
     public function read($id)

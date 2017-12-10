@@ -3,6 +3,7 @@ namespace app\customers\logic;
 use app\common\logic\BasicLogic;
 use app\customers\model\CustomersModel;
 use app\customers\model\CustomersRecordsModel;
+use app\images\service\AliService;
 use think\Cache;
 
 /**
@@ -91,10 +92,16 @@ class CustomersLogic extends BasicLogic
             $model->where('manager_id',$params['manager_id']);
         }
 
+        if(isset($params['phone']) && $params['phone']){
+            $model->where('phone',$params['phone']);
+        }
+
         if(isset($params['page']) && isset($params['size']) && $params['page'] && $params['size']){
             $list = $model->paginate($params['size'],'',array('page'=>$params['page']));
+        }else{
+            $list = $model->select();
         }
-        
+
         return $list;
 
     }
@@ -126,10 +133,31 @@ class CustomersLogic extends BasicLogic
     }
 
     public function listByResidences($params){
-        $userInfo = Cache::get($_SERVER['token']);
-        echo '<pre>';var_dump($userInfo);echo '</pre>';exit();
         $list = $this->listModels($params);
+        $AliService = new AliService();
+        $topList = $bodyList = [];
+        $time = time();
+        foreach($list as $key=>$value){
+            $design = $value->desgin;
+            $residence = $value->residence;
+            $records = $value->records;
 
+            $topList[$key][] = $bodyList[$key]['name'] = $residence->name.$design->ridgepole.'栋'.$design->cell.'单元';
+            $bodyList[$key]['starttime_text'] = date("m-d",strtotime($value->starttime)).'开工';
+            $bodyList[$key]['endtime_text'] = date("m-d",strtotime($value->endtime)).'验收';
+            $bodyList[$key]['process_text'] = '第'.ceil(($time - strtotime($value->starttime)) /86400).'天 水电安装';
+
+            $bodyList[$key]['record']= [];
+            foreach($records as $rekey=>$item){
+                $images = $item->images;
+                $bodyList[$key]['record'][$rekey]['content'] = $item['content'];
+                $bodyList[$key]['record'][$rekey]['images'] = [];
+                foreach($images as $imKey=>$imValue){
+                    $bodyList[$key]['record'][$rekey]['images'][] = $AliService->getUrl($imValue['image_hash_code']);
+                }
+            }
+        }
+        return ['top'=>$topList,'body'=>$bodyList];
     }
 
     public function read($id)

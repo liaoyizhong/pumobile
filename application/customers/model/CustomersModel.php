@@ -19,7 +19,7 @@ class CustomersModel extends BasicModel
 
     public function residence()
     {
-        return $this->hasOne('\app\residences\model\ResidencesModel','residences_id','id');
+        return $this->hasOne('\app\residences\model\ResidencesModel','id','residence_id');
     }
 
     public function desgin()
