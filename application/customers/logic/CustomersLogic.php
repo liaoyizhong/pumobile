@@ -142,15 +142,25 @@ class CustomersLogic extends BasicLogic
             $residence = $value->residence;
             $records = $value->records;
 
-            $topList[$key][] = $bodyList[$key]['name'] = $residence->name.$design->ridgepole.'栋'.$design->cell.'单元';
+            $topList[$key] = $bodyList[$key]['name'] = $residence->name.$design->ridgepole.'栋'.$design->cell.'单元';
             $bodyList[$key]['starttime_text'] = date("m-d",strtotime($value->starttime)).'开工';
             $bodyList[$key]['endtime_text'] = date("m-d",strtotime($value->endtime)).'验收';
             $bodyList[$key]['process_text'] = '第'.ceil(($time - strtotime($value->starttime)) /86400).'天 水电安装';
 
             $bodyList[$key]['record']= [];
             foreach($records as $rekey=>$item){
+                $interval = (int)($time-strtotime($item->createtime));
+                if($interval<3600){
+                    $lastTime = ceil($interval / 60).'分钟前';
+                }elseif($interval<86400){
+                    $lastTime = ceil($interval / 3600).'小时前';
+                }else{
+                    $lastTime = ceil($interval / 86400).'天前';
+                }
                 $images = $item->images;
                 $bodyList[$key]['record'][$rekey]['content'] = $item['content'];
+                $bodyList[$key]['record'][$rekey]['name'] = $residence->name;
+                $bodyList[$key]['record'][$rekey]['lastTime'] = $lastTime;
                 $bodyList[$key]['record'][$rekey]['images'] = [];
                 foreach($images as $imKey=>$imValue){
                     $bodyList[$key]['record'][$rekey]['images'][] = $AliService->getUrl($imValue['image_hash_code']);
