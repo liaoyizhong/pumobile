@@ -3,6 +3,7 @@
 namespace app\common\controller;
 
 use app\common\enums\HeaderStatus;
+use app\common\enums\LoginRole;
 use app\common\enums\ResponseCode;
 use app\common\enums\ResponseVersion;
 use app\managers\model\ManagersModel;
@@ -105,7 +106,7 @@ abstract class Basic extends thinkController
 
         $this->userId = $userInfo['user_id'];
         $this->role = $userInfo['role'];
-        if($this->role != ManagersModel::ROLEMANAGER){
+        if($this->role != LoginRole::ROLEMANAGER){
             $array = [
                 'err_code' => ResponseCode::DATA_MISS,
                 'msg' => '没有权限',
@@ -145,7 +146,7 @@ abstract class Basic extends thinkController
         $arr = json_decode($json, true);
         $this->userId = $arr['user_id'];
         $this->role = $arr['role'];
-        if($this->role != ManagersModel::ROLECUSTOMER){
+        if($this->role != LoginRole::ROLECUSTOMER){
             $array = [
                 'err_code' => ResponseCode::DATA_MISS,
                 'msg' => '没有权限',

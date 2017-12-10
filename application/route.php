@@ -21,7 +21,9 @@ return [
         'images' => 'images/images', //图片
     ],
     'sms-code' => ['admin/Sms/save',['method'=>'post']],//登录验证码
+    'customers/login' => ['customers/login/save',['method'=>'post']], //客户员登录
     'managers/login' => ['managers/login/save',['method'=>'post']], //管理员登录
+
     'residences/:id/designs' => ['residences/residences/designs',['method'=>'get'],['id'=>'\d+']],
     'sms' => ['test/test/smsTest',['method'=>'get'],['id'=>'\d+']]
 ];

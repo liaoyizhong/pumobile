@@ -24,7 +24,7 @@ class Sms extends Basic
         }
         $sms = new FrontEndSms();
         try {
-            $sms->sendCommonSms($params['phone'], SmsTemplateEnum::SMS_FORGET_TEMPLATE_CODE);
+            $sms->sendCommonSms($params['phone'], SmsTemplateEnum::SMS_FORGET_TEMPLATE_CODE, $params['role']);
             return $this->showResponse(ResponseCode::SUCCESS, '生成成功', [], array('status' => HeaderStatus::SUCCESS));
         } catch (\exception $e) {
             return $this->showResponse(ResponseCode::UNKNOW_ERROR, $e->getMessage(), [], array('status' => HeaderStatus::BADREQUEST));

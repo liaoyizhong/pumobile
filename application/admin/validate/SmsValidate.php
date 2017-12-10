@@ -2,8 +2,7 @@
 
 namespace app\admin\validate;
 
-use app\customers\controller\CustomersRecords;
-use app\customers\model\CustomersRecordsModel;
+use app\customers\model\CustomersModel;
 use app\managers\model\ManagersModel;
 use think\Validate;
 
@@ -33,7 +32,7 @@ class SmsValidate extends Validate
             }
             return TRUE;
         }elseif($value == self::TYPECUSTOMER){
-            $model = new CustomersRecordsModel();
+            $model = new CustomersModel();
             $isExist = $model->where('phone', $data['phone'])->where('is_delete', '2')->find();
             if(!$isExist){
                 return '账号不正确';
