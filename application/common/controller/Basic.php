@@ -18,8 +18,8 @@ use think\Loader;
  */
 abstract class Basic extends thinkController
 {
-    private $userId;
-    private $role;
+    protected $userId;
+    protected $role;
 
     const METHODPOST = 'post';
     const METHODPUT = 'put';
@@ -106,6 +106,7 @@ abstract class Basic extends thinkController
 
         $this->userId = $userInfo['user_id'];
         $this->role = $userInfo['role'];
+
         if($this->role != LoginRole::ROLEMANAGER){
             $array = [
                 'err_code' => ResponseCode::DATA_MISS,

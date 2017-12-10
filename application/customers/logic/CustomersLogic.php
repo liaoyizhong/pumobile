@@ -23,8 +23,8 @@ class CustomersLogic extends BasicLogic
     public function save($params)
     {
         //获取操作员信息
-        $json = Cache::get($_SERVER['HTTP_TOKEN']);
-        $arr = json_decode($json, true);
+        $arr = Cache::get($_SERVER['HTTP_TOKEN']);
+
         try{
             $model = new CustomersModel();
             $model->region_id = $params['region_id'];
@@ -87,29 +87,49 @@ class CustomersLogic extends BasicLogic
         $model = new CustomersModel();
         $model->where('is_delete',2);
 
+        if(isset($params['manager_id']) && $params['manager_id']){
+            $model->where('manager_id',$params['manager_id']);
+        }
+
         if(isset($params['page']) && isset($params['size']) && $params['page'] && $params['size']){
             $list = $model->paginate($params['size'],'',array('page'=>$params['page']));
         }
+        
         return $list;
 
     }
 
+    /**
+     * 后台我的客户-列表
+     * @param $params
+     * @return array
+     */
     public function customerList($params){
         $list = $this->listModels($params);
-        $customerId = '';
+
         $return = [];
         foreach($list as $key=>$value){
+            $design = $value->desgin;
+            $return[$key]['house_name'] = $design['ridgepole'].'栋'.$design['cell'].'单元'.$design['house_type'];
+            $return[$key]['name'] = $value['family_name'].$value['name'];
+            $return[$key]['schedule'] = $value->createtime.'-'.$value->endtime;
             $records = $value->records;
             if(count($records)){
                 $createTime = end($records)->createtime;
-                $design = $value->desgin;
-                $return[$key]['house_name'] = $design['ridgepole'].'栋'.$design['cell'].'单元'.$design['house_type'];
-                $return[$key]['name'] = $value['family_name'].$value['name'];
-                $return[$key][''] = $value;
                 $return[$key]['last_release_text'] = ceil((time()-strtotime($createTime))/86400).'天前';
+            }else{
+                $return[$key]['last_release_text'] = '还没有直播内容';
             }
         }
+        
         return $return;
+    }
+
+    public function listByResidences($params){
+        $userInfo = Cache::get($_SERVER['token']);
+        echo '<pre>';var_dump($userInfo);echo '</pre>';exit();
+        $list = $this->listModels($params);
+
     }
 
     public function read($id)

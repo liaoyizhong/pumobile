@@ -14,7 +14,8 @@ use think\Loader;
 class Customers extends Basic
 {
     protected $beforeActionList = [
-        'checkManagerLogin' => ['only'=>'save']
+        'checkManagerLogin' => ['only'=>'save,index'],
+        'checkCustmoerLogin' => ['only'=>'listProcess']
     ];
     /**
      * @return \think\response\Json
@@ -41,10 +42,15 @@ class Customers extends Basic
 
     }
 
+    /**
+     *   后台我的客户-列表
+     * * @return \think\response\Json
+     */
     public function index()
     {
-        $params['size'] = $this->request->get('size');
-        $params['page'] = $this->request->get('page');
+        $params['size'] = $this->request->get('size','10');
+        $params['page'] = $this->request->get('page','1');
+        $params['manager_id'] = $this->userId;
         $logic = Loader::model('CustomersLogic','logic');
         try{
             $lists = $logic->customerList($params);
@@ -52,6 +58,13 @@ class Customers extends Basic
             return $this->showResponse(ResponseCode::UNKNOW_ERROR,'读取失败',[],array('status'=>HeaderStatus::BADREQUEST));
         }
         return $this->showResponse(ResponseCode::SUCCESS,'读取成功',$lists,array('status'=>HeaderStatus::SUCCESS));
+    }
+
+    public function listProcess()
+    {
+
+        $logic = Loader::model('CustomersLogic','logic');
+        $logic->listByResidences();
     }
 
     public function read($id)

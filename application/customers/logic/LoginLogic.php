@@ -32,7 +32,7 @@ class LoginLogic extends BasicLogic
         }
 
         if($cache['role'] != LoginRole::ROLECUSTOMER){
-            return [FALSE,'未被授权的身份',[]];
+            return [FALSE,'未被授权的验证码',[]];
         }
 
         //验证token
@@ -48,6 +48,7 @@ class LoginLogic extends BasicLogic
         
         $msg = array(
             'user_id' => $isExist->id,
+            'phone' => $isExist->phone,
             'role' => LoginRole::ROLECUSTOMER
         );
         if (Cache::set($token, $msg, 7200)) {
