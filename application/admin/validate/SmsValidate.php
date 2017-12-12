@@ -18,7 +18,7 @@ class SmsValidate extends Validate
 
     protected $rule = [
         'phone' => 'require',
-        'type' => 'checkRole'
+        'role' => 'require|checkRole'
     ];
 
     protected function checkRole($value = array(),$rule,$data)

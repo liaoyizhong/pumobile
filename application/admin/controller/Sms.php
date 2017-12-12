@@ -24,8 +24,12 @@ class Sms extends Basic
         }
         $sms = new FrontEndSms();
         try {
-            $sms->sendCommonSms($params['phone'], SmsTemplateEnum::SMS_FORGET_TEMPLATE_CODE, $params['role']);
-            return $this->showResponse(ResponseCode::SUCCESS, '生成成功', [], array('status' => HeaderStatus::SUCCESS));
+            $sms->setRole($params['role']);
+            $sendResult = $sms->sendCommonSms($params['phone'], SmsTemplateEnum::SMS_FORGET_TEMPLATE_CODE);
+            if(!$sendResult[0]){
+                return $this->showResponse(ResponseCode::UNKNOW_ERROR,'发送太过频繁',[],array('status' => HeaderStatus::BADREQUEST));
+            }
+            return $this->showResponse(ResponseCode::SUCCESS, '发送成功', [], array('status' => HeaderStatus::SUCCESS));
         } catch (\exception $e) {
             return $this->showResponse(ResponseCode::UNKNOW_ERROR, $e->getMessage(), [], array('status' => HeaderStatus::BADREQUEST));
         }

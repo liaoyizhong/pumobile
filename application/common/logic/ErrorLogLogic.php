@@ -8,7 +8,7 @@ use app\common\model\ErrorLogModel;
  */
 class ErrorLogLogic
 {
-    public function save($msg)
+    public static function save($msg)
     {
         $model = new ErrorLogModel();
         $model->msg = $msg;

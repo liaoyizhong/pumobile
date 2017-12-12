@@ -4,7 +4,6 @@ namespace app\images\service;
 
 use app\images\interfaces\BasicInterface;
 use OSS\OssClient;
-use app\common\enums\ResponseCode;
 
 /**
  * User: liaoyizhong

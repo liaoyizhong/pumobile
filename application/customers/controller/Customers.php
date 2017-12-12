@@ -15,7 +15,7 @@ class Customers extends Basic
 {
     protected $beforeActionList = [
         'checkManagerLogin' => ['only'=>'save,index'],
-        'checkCustmoerLogin' => ['only'=>'listProcess']
+//        'checkCustmoerLogin' => ['only'=>'listProcess']
     ];
     /**
      * @return \think\response\Json
@@ -60,13 +60,14 @@ class Customers extends Basic
         return $this->showResponse(ResponseCode::SUCCESS,'读取成功',$lists,array('status'=>HeaderStatus::SUCCESS));
     }
 
-    public function listProcess()
+    public function listProcess($id = '')
     {
-        $params['phone'] = $this->phone;
+        $params['phone'] = isset($this->phone)?$this->phone:""; //验证的地方进行了获取和赋值
+        $params['id'] = $id;
         $logic = Loader::model('CustomersLogic','logic');
 
         try{
-            $result = $logic->listByResidences($params);
+            $result = $logic->listByProcess($params);
         }catch (\exception $e){
             return $this->showResponse(ResponseCode::UNKNOW_ERROR,'读取失败',[],array('status'=>HeaderStatus::BADREQUEST));
         }
