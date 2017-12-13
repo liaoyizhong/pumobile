@@ -23,7 +23,7 @@ class ResidencesDesign extends Basic
         $logic = \think\Loader::model('\app\residences\logic\ResidencesLogic','logic');
         $result = $logic->getDesignsMenu($id);
         if(!$result[0]){
-            return $this->showResponse(ResponseCode::UNKNOW_ERROR,$result[1],[],array("status"=>HeaderStatus::NOTFOUND));
+            return $this->showResponse(ResponseCode::UNKNOW_ERROR,$result[1],'',array("status"=>HeaderStatus::NOTFOUND));
         }else{
             return $this->showResponse(ResponseCode::SUCCESS,$result[1],$result[2],array("status"=>HeaderStatus::SUCCESS));
         }

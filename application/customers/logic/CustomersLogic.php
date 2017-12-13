@@ -5,7 +5,6 @@ use app\customers\model\CustomersModel;
 use app\customers\model\CustomersRecordsModel;
 use app\images\service\AliService;
 use think\Cache;
-use think\Db;
 
 /**
  * User: liaoyizhong
@@ -13,7 +12,7 @@ use think\Db;
  * Time: 15:53
  */
 
-class CustomersLogic extends MainLogic
+class CustomersLogic extends BasicLogic
 {
     private $id;
 
@@ -84,7 +83,28 @@ class CustomersLogic extends MainLogic
         }
     }
 
+    public function listModels($params)
+    {
+        $model = new CustomersModel();
+        $model->where('is_delete',2);
 
+        if(isset($params['manager_id']) && $params['manager_id']){
+            $model->where('manager_id',$params['manager_id']);
+        }
+
+        if(isset($params['phone']) && $params['phone']){
+            $model->where('phone',$params['phone']);
+        }
+
+        if(isset($params['page']) && isset($params['size']) && $params['page'] && $params['size']){
+            $list = $model->paginate($params['size'],'',array('page'=>$params['page']));
+        }else{
+            $list = $model->select();
+        }
+
+        return $list;
+
+    }
 
     /**
      * 后台我的客户-列表
@@ -93,6 +113,7 @@ class CustomersLogic extends MainLogic
      */
     public function customerList($params){
         $list = $this->listModels($params);
+
         $return = [];
         foreach($list as $key=>$value){
             $design = $value->desgin;
@@ -111,32 +132,17 @@ class CustomersLogic extends MainLogic
         return $return;
     }
 
-    /**
-     * 我家进度--业主视觉
-     * @param $params
-     * @return array
-     */
-    public function listByProcess($params){
-        $topList = $bodyList = [];
-        if($params['id']){
-            $topList = $this->getTop();
-        }
+    public function listByResidences($params){
         $list = $this->listModels($params);
-        $customerId = [];
-        foreach ($list as $item){
-            $customerId['id'][] = $item;
-        }
         $AliService = new AliService();
+        $topList = $bodyList = [];
         $time = time();
         foreach($list as $key=>$value){
             $design = $value->desgin;
             $residence = $value->residence;
             $records = $value->records;
-            $bodyList[$key]['name'] = $residence->name.$design->ridgepole.'栋'.$design->cell.'单元';
-            if(!$params['id']){
-                $topList[$key]['value'] = $value->id;
-                $topList[$key]['label'] = $bodyList[$key]['name'];
-            }
+
+            $topList[$key] = $bodyList[$key]['name'] = $residence->name.$design->ridgepole.'栋'.$design->cell.'单元';
             $bodyList[$key]['starttime_text'] = date("m-d",strtotime($value->starttime)).'开工';
             $bodyList[$key]['endtime_text'] = date("m-d",strtotime($value->endtime)).'验收';
             $bodyList[$key]['process_text'] = '第'.ceil(($time - strtotime($value->starttime)) /86400).'天 水电安装';

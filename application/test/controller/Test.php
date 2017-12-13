@@ -14,11 +14,6 @@ use OSS\OssClient;
 
 class Test extends BasicController
 {
-    public function say()
-    {
-        echo '<pre>';var_dump(2);echo '</pre>';exit();
-    }
-    
     public function zipImage()
     {
         $endpoint = "http://oss-cn-hangzhou.aliyuncs.com";

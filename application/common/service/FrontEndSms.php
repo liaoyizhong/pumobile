@@ -8,17 +8,15 @@
 namespace app\common\service;
 
 
-use app\common\enums\LoginRole;
 use app\lib\enum\SmsTemplateEnum;
 
 class FrontEndSms extends Sms
 {
-    protected $role = LoginRole::ROLEMANAGER;
     /**
      * 发送短信
      *
      * @param $phoneNumbers
-     * @return array
+     * @return mixed|\SimpleXMLElement
      */
     public function sendCommonSms($phoneNumbers, $template_code = SmsTemplateEnum::SMS_REGISTER_TEMPLATE_CODE)
     {
@@ -36,16 +34,6 @@ class FrontEndSms extends Sms
 
         // 插入短信日志
         $result = $this->sendSms($template_code, $phoneNumbers, $templateParam);
-        return $result;
-    }
-
-    public function setRole($value)
-    {
-        $this->role = $value;
-    }
-
-    public function getRole()
-    {
-        return $this->role;
+        return [$result,'发送失败'];
     }
 }

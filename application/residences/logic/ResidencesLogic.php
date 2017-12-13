@@ -129,8 +129,8 @@ class ResidencesLogic extends BasicLogic
 
     public function menuRow($model)
     {
-        $return['label'] = $model->name;
-        $return['value'] = $model->id;
+        $return['name'] = $model->name;
+        $return['id'] = $model->id;
         return $return;
     }
 
@@ -285,10 +285,10 @@ class ResidencesLogic extends BasicLogic
 
     public function designMenuRow($model)
     {
-        $return['label'] = $model->ridgepole?$model->ridgepole.'栋':'';
-        $return['label'] .= $model->cell?$model->cell.'单元':'';
-        $return['label'] .= $model->house_type?$model->house_type:'';
-        $return['value'] = $model->id;
+        $return['name'] = $model->ridgepole?$model->ridgepole.'栋':'';
+        $return['name'] .= $model->cell?$model->cell.'单元':'';
+        $return['name'] .= $model->house_type?$model->house_type:'';
+        $return['id'] = $model->id;
         return $return;
     }
 }
