@@ -88,7 +88,8 @@ abstract class Basic extends thinkController
             $array = [
                 'err_code' => ResponseCode::PARAMS_MISS,
                 'msg' => '缺token',
-                'data' => []
+                'data' => [],
+                'request_url' => $_SERVER['REQUEST_URI']
             ];
             http_response_code(HeaderStatus::FORBIDDEN);
             echo json_encode($array,true);exit;
@@ -98,10 +99,11 @@ abstract class Basic extends thinkController
         if(!$userInfo){
             $array = [
                 'err_code' => ResponseCode::DATA_MISS,
-                'msg' => '没有登录',
-                'data' => []
+                'msg' => '无效token',
+                'data' => [],
+                'request_url' => $_SERVER['REQUEST_URI']
             ];
-            http_response_code(HeaderStatus::UNAUTHORIZED);
+            http_response_code(HeaderStatus::FORBIDDEN);
             echo json_encode($array,true);exit;
         }
 
@@ -112,21 +114,13 @@ abstract class Basic extends thinkController
             $array = [
                 'err_code' => ResponseCode::DATA_MISS,
                 'msg' => '没有权限',
-                'data' => []
+                'data' => [],
+                'request_url' => $_SERVER['REQUEST_URI']
             ];
             http_response_code(HeaderStatus::UNAUTHORIZED);
             echo json_encode($array,true);exit;
         }
 
-        if (!$this->userId) {
-            $array = [
-                'err_code' => ResponseCode::DATA_MISS,
-                'msg' => '无效token',
-                'data' => []
-            ];
-            http_response_code(HeaderStatus::FORBIDDEN);
-            echo json_encode($array,true);exit;
-        }
     }
 
     /**
@@ -138,13 +132,25 @@ abstract class Basic extends thinkController
             $array = [
                 'err_code' => ResponseCode::PARAMS_MISS,
                 'msg' => '缺token',
-                'data' => []
+                'data' => [],
+                'request_url' => $_SERVER['REQUEST_URI']
             ];
             http_response_code(HeaderStatus::FORBIDDEN);
             echo json_encode($array,true);exit;
         }
 
         $arr = Cache::get($_SERVER['HTTP_TOKEN']);
+        if(!$arr){
+            $array = [
+                'err_code' => ResponseCode::DATA_MISS,
+                'msg' => '无效token',
+                'data' => [],
+                'request_url' => $_SERVER['REQUEST_URI']
+            ];
+            http_response_code(HeaderStatus::FORBIDDEN);
+            echo json_encode($array,true);exit;
+        }
+
         $this->userId = $arr['user_id'];
         $this->role = $arr['role'];
         $this->phone = $arr['phone'];
@@ -152,7 +158,8 @@ abstract class Basic extends thinkController
             $array = [
                 'err_code' => ResponseCode::DATA_MISS,
                 'msg' => '没有权限',
-                'data' => []
+                'data' => [],
+                'request_url' => $_SERVER['REQUEST_URI']
             ];
             http_response_code(HeaderStatus::UNAUTHORIZED);
             echo json_encode($array,true);exit;
@@ -161,7 +168,8 @@ abstract class Basic extends thinkController
             $array = [
                 'err_code' => ResponseCode::DATA_MISS,
                 'msg' => '无效token',
-                'data' => []
+                'data' => [],
+                'request_url' => $_SERVER['REQUEST_URI']
             ];
             http_response_code(HeaderStatus::FORBIDDEN);
             echo json_encode($array,true);exit;

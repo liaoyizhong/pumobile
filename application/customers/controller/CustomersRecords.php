@@ -17,8 +17,9 @@ use think\Loader;
 class CustomersRecords extends Basic
 {
     protected $beforeActionList = [
-        'checkManagerLogin'
+        'checkManagerLogin' => ['only' => 'save,update'],
     ];
+
     /**
      * 保存新建的资源
      *
@@ -26,43 +27,43 @@ class CustomersRecords extends Basic
     public function save()
     {
         $params = $this->getParams(self::METHODPOST);
-        $check = $this->validate($params,'CustomerRecordValidate');
-        if($check !== TRUE){
-            return $this->showResponse(ResponseCode::PARAMS_INVALID,$check,[],array('status'=>HeaderStatus::BADREQUEST));
+        $check = $this->validate($params, 'CustomerRecordValidate');
+        if ($check !== TRUE) {
+            return $this->showResponse(ResponseCode::PARAMS_INVALID, $check, [], array('status' => HeaderStatus::BADREQUEST));
         }
 
         $record['customers_id'] = $params['customers_id'];
         $record['content'] = $params['content'];
-        $logic = Loader::model('CustomersRecordsLogic','logic');
-        try{
+        $logic = Loader::model('CustomersRecordsLogic', 'logic');
+        try {
             Db::startTrans();
-            if(!$newId = $logic->save($record)){
+            if (!$newId = $logic->save($record)) {
                 Db::rollback();
-                return $this->showResponse(ResponseCode::UNKNOW_ERROR,'保存失败',[],array('status'=>HeaderStatus::UNPROCESABLEENTITY));
+                return $this->showResponse(ResponseCode::UNKNOW_ERROR, '保存失败', [], array('status' => HeaderStatus::UNPROCESABLEENTITY));
             }
 
-            if(isset($params['pic_hash_code']) && count($params['pic_hash_code'])){
-                $imageLogic = Loader::model('CustomersRecordsImagesLogic','logic');
+            if (isset($params['pic_hash_code']) && count($params['pic_hash_code'])) {
+                $imageLogic = Loader::model('CustomersRecordsImagesLogic', 'logic');
                 $imageParams = [];
-                foreach ($params['pic_hash_code'] as $key=>$value){
+                foreach ($params['pic_hash_code'] as $key => $value) {
                     $imageParams[$key]['image_hash_code'] = $value['hash_code'];
-                $imageParams[$key]['customers_records_id'] = $newId;
+                    $imageParams[$key]['customers_records_id'] = $newId;
                     $imageParams[$key]['order_num'] = $key;
                 }
                 $imageLogic->saveAll($imageParams);
                 Db::commit();
-                return $this->showResponse(ResponseCode::SUCCESS,'保存成功',[],array('status'=>HeaderStatus::SUCCESS));
+                return $this->showResponse(ResponseCode::SUCCESS, '保存成功', [], array('status' => HeaderStatus::SUCCESS));
             }
-        }catch (\exception $e){
+        } catch (\exception $e) {
             Db::rollback();
-            return $this->showResponse(ResponseCode::UNKNOW_ERROR,'保存失败',[],array('status'=>HeaderStatus::NOTFOUND));
+            return $this->showResponse(ResponseCode::UNKNOW_ERROR, '保存失败', [], array('status' => HeaderStatus::NOTFOUND));
         }
     }
 
     /**
      * 保存更新的资源
      *
-     * @param  int  $id
+     * @param  int $id
      * @return \think\Response
      */
     public function update($id)
@@ -70,8 +71,8 @@ class CustomersRecords extends Basic
         $params = $this->getParams(self::METHODPUT);
         $model = RecordModel::get($id);
 
-        $updateParams['customers_id'] = isset($params['customers_id'])?$params['customers_id']:$model->customers_id;
-        $updateParams['content'] = isset($params['content'])?$params['content']:$model->content;
+        $updateParams['customers_id'] = isset($params['customers_id']) ? $params['customers_id'] : $model->customers_id;
+        $updateParams['content'] = isset($params['content']) ? $params['content'] : $model->content;
 
         try {
             $model->save($updateParams);
@@ -89,10 +90,28 @@ class CustomersRecords extends Basic
                 Db::commit();
                 return $this->showResponse(ResponseCode::SUCCESS, '保存成功', [], array('status' => HeaderStatus::SUCCESS));
             }
-        }catch (\exception $e){
+        } catch (\exception $e) {
             Db::rollback();
-            return $this->showResponse(ResponseCode::UNKNOW_ERROR,'保存失败',[],array('status'=>HeaderStatus::NOTFOUND));
+            return $this->showResponse(ResponseCode::UNKNOW_ERROR, '保存失败', [], array('status' => HeaderStatus::NOTFOUND));
         }
+    }
+
+    /**
+     * 装修直播
+     * @param $params
+     * @return array
+     */
+    public function listResidence($id = '')
+    {
+        $params['residence_id'] = $id;
+        $logic = Loader::model('CustomersRecordsLogic', 'logic');
+
+        try {
+            $result = $logic->listByResidence($params);
+        } catch (\exception $e) {
+            return $this->showResponse(ResponseCode::UNKNOW_ERROR, '读取失败,错误信息:' . $e->getMessage(), [], array('status' => HeaderStatus::BADREQUEST));
+        }
+        return $this->showResponse(ResponseCode::SUCCESS, '读取成功', $result, array('status' => HeaderStatus::SUCCESS));
     }
 
     /**
@@ -116,20 +135,26 @@ class CustomersRecords extends Basic
     }
 
     /**
-     * 显示指定的资源
      *
-     * @param  int  $id
+     * 查找指定id 的customers
+     * @param  int $id
      * @return \think\Response
      */
     public function read($id)
     {
-        //
+        $logic = Loader::model('CustomersRecordsLogic','logic');
+        try{
+            $result = $logic->read($id);
+            return $this->showResponse(ResponseCode::SUCCESS,'',$result,array('status'=>HeaderStatus::SUCCESS));
+        }catch (\Exception $e){
+            return $this->showResponse(ResponseCode::UNKNOW_ERROR,$e->getMessage(),[],array('status'=>HeaderStatus::BADREQUEST));
+        }
     }
 
     /**
      * 显示编辑资源表单页.
      *
-     * @param  int  $id
+     * @param  int $id
      * @return \think\Response
      */
     public function edit($id)
@@ -138,15 +163,16 @@ class CustomersRecords extends Basic
     }
 
 
-
     /**
      * 删除指定资源
      *
-     * @param  int  $id
+     * @param  int $id
      * @return \think\Response
      */
     public function delete($id)
     {
         //
     }
+
+
 }

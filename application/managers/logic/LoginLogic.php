@@ -30,6 +30,10 @@ class LoginLogic extends BasicLogic
 
         $cache = Cache::get($params['phone']);
         //验证身份
+        if(!$cache){
+            return [FALSE,'无效code',[]];
+        }
+        
         if($cache['role'] != LoginRole::ROLEMANAGER){
             return [FALSE, '未被授权的验证码',[]];
         }
@@ -46,7 +50,7 @@ class LoginLogic extends BasicLogic
             'user_id' => $model->id,
             'role' => LoginRole::ROLEMANAGER
         );
-        if (Cache::set($token, $msg, 7200)) {
+        if (Cache::set($token, $msg, 28800)) {
             Cache::rm($params['phone']);
             return [TRUE, "登录成功", array('token'=>$token)];
         } else {

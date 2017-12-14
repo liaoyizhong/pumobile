@@ -13,6 +13,10 @@ use app\customers\model\CustomersModel;
 
 abstract class MainLogic extends BasicLogic
 {
+    /**
+     * @param array $params
+     * @return false|\PDOStatement|string|\think\Collection|\think\Paginator
+     */
     public function listModels($params = array())
     {
         $model = new CustomersModel();
@@ -45,18 +49,18 @@ abstract class MainLogic extends BasicLogic
     }
 
     /**
-     * 获取我家进度头部导航
+     * 获取"装修直播"、"我家进度"头部
      * @return array
      */
-    public function getTop()
+    public function getTop($params = array())
     {
-        $list = $this->listModels();
+        $list = $this->listModels($params);
         $topList = [];
         foreach ($list as $key => $item) {
-            $design = $item->desgin;
+            $design = $item->design;
             $residence = $item->residence;
             $topList[$key]['value'] = $item->id;
-            $topList[$key]['label'] = $bodyList[$key]['name'] = $residence->name.$design->ridgepole.'栋'.$design->cell.'单元';
+            $topList[$key]['label'] = $bodyList[$key]['name'] = isset($residence)?$residence->name.$design->ridgepole.'栋'.$design->cell.'单元':"";
         }
         return $topList;
     }

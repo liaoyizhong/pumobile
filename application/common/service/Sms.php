@@ -24,7 +24,7 @@ class Sms
     private $accessKeyId = 'LTAIpCW8S0GeNmeG';
     private $accessKeySecret = 'gugmHxKPk4R5pbMN0dbHAi6d2iqq2P';
     private $signName = '鲁班发现';
-    private $expires_in = 60*15;
+    private $expires_in = 900;
     private $resendTime = 60;
 
     /**
@@ -73,12 +73,12 @@ class Sms
      * @param $phoneNumbers
      * @param null $templateParam
      * @param null $outId
-     * @return mixed|\SimpleXMLElement
+     * @return array
      */
     protected function sendSms($templateCode, $phoneNumbers, $templateParam = null, $outId = null)
     {
         $this->_init();
-
+        
         try {
             // 初始化SendSmsRequest实例用于设置发送短信的参数
             $request = new SendSmsRequest();
@@ -106,10 +106,10 @@ class Sms
 
                 // 写入缓存
                 $this->cacheVerifyCode($phoneNumbers, $templateParam['code']);
-                return $acsResponse->RequestId;
+                return [$acsResponse->RequestId,$acsResponse->Message];
             } else {
                 // failed
-                return false;
+                return [false,$acsResponse->Message];
             }
 
         } catch (ClientException $e) {
@@ -148,6 +148,7 @@ class Sms
     {
         $cacheData = [
             'code' => $code,
+            'role' => $this->role,
             'times' => $_SERVER['REQUEST_TIME'] + $this->resendTime, //重复发送时间
         ];
         $result = Cache::set($mobile, $cacheData, $this->expires_in);

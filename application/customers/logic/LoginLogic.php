@@ -51,7 +51,7 @@ class LoginLogic extends BasicLogic
             'phone' => $isExist->phone,
             'role' => LoginRole::ROLECUSTOMER
         );
-        if (Cache::set($token, $msg, 7200)) {
+        if (Cache::set($token, $msg, 28800)) {
             Cache::rm($params['phone']);
             return [TRUE, "登录成功", array('token'=>$token)];
         } else {
