@@ -11,6 +11,7 @@ use app\common\logic\BasicLogic;
 use app\customers\model\CustomersRecordsImagesModel;
 use app\customers\model\CustomersRecordsModel;
 use app\residences\model\ResidencesDesignImagesModel;
+use app\residences\model\ResidencesModel;
 use think\Loader;
 
 class CustomersRecordsLogic extends MainLogic
@@ -24,26 +25,47 @@ class CustomersRecordsLogic extends MainLogic
     }
 
     /**
-     * 装修直播
+     * 装修直播列表
      * @param $params
      * @return array
      */
     public function listByResidence($params)
     {
-        $topList = $this->getTop();
-        $bodyList = [];
+        $bodyList = $topList = [];
+        $residenceModel = new ResidencesModel();
+        $residenceList = $residenceModel->where('is_delete','2')->select();
+        foreach ($residenceList as $key => $item) {
+            $topList[$key]['value'] = $item->id;
+            $topList[$key]['label'] = $item->name;
+        }
 
         $model = new CustomersRecordsModel();
         $list = $model->listByResidence($params);
-        $design_url = isset(current($list)['design_url']) ? current($list)['design_url'] : "";
+        $design_url = "";
         $ids = array_column($list, 'id');
         $imageModel = new CustomersRecordsImagesModel();
         $imageList = $imageModel->whereIn('customers_records_id', $ids)->select();
 
+        $time = time();
         foreach ($list as $key => $item) {
             $bodyList[$key]['content'] = $item['content'];
-            $bodyList[$key]['name'] = $item['name'];
-            $bodyList[$key]['lastTime'] = $item['createtime'];
+            $bodyList[$key]['customer_id'] = $item['customers_id'];
+            $bodyList[$key]['residence_name'] = $item['residence_name'];
+            $bodyList[$key]['house_name'] = '';
+            $bodyList[$key]['house_name'] .= $item['ridgepole']?$item['ridgepole'].'栋':"";
+            $bodyList[$key]['house_name'] .= $item['cell']?$item['cell'].'单元':"";
+            $bodyList[$key]['house_name'] .= $item['house_type']?$item['house_type']:"";
+            $bodyList[$key]['craetetime'] = $item['createtime'];
+
+            $last = $time - strtotime($item['createtime']);
+            if($last<3600){
+                $bodyList[$key]['last_time_text'] = round($last/60).'分钟';
+            }elseif($last<86400){
+                $bodyList[$key]['last_time_text'] = round($last/3600).'小时';
+            }else{
+                $bodyList[$key]['last_time_text'] = round($last/86400).'天';
+            }
+
             $bodyList[$key]['image_hash_code'] = [];
             foreach ($imageList as $imKey => $imitem) {
                 if ($imitem->customers_records_id == $item['id']) {
@@ -52,24 +74,6 @@ class CustomersRecordsLogic extends MainLogic
             }
         }
         return ['top' => $topList, 'design_url' => $design_url, 'body' => $bodyList];
-    }
-
-    /**
-     * 根据户型设计取出一张设计图片
-     * @param $residences_design_id
-     * @return string
-     */
-    public function getDesignImage($residences_design_id)
-    {
-        $aliService = \think\Loader::model('\app\images\service\AliService', 'logic');
-        $model = new ResidencesDesignImagesModel();
-        $result = $model->where('residences_design_id', $residences_design_id)->where('type', 2)->find();
-        if ($result) {
-            $url = $aliService->getUrl($result->image_hash_code);
-        } else {
-            $url = '';
-        }
-        return $url;
     }
 
     /**

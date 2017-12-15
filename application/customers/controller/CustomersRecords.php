@@ -13,6 +13,7 @@ use app\common\enums\ResponseCode;
 use app\customers\model\CustomersRecordsModel as RecordModel;
 use think\Db;
 use think\Loader;
+use think\Request;
 
 class CustomersRecords extends Basic
 {

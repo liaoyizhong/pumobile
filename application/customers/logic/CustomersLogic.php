@@ -184,6 +184,7 @@ class CustomersLogic extends MainLogic
         $topList = $this->getTop(array("phone" => $params["phone"]));
 
         $list = $this->listModels($params);
+
         $AliService = new AliService();
         $time = time();
         foreach ($list as $key => $value) {
@@ -234,25 +235,45 @@ class CustomersLogic extends MainLogic
         return ['top' => $topList, 'body' => $bodyList];
     }
 
+    public function listByNeighbor()
+    {
+
+    }
+
     public function read($id)
     {
         $this->get($id);
     }
 
+    /**
+     * 客户信息
+     * @param $id
+     * @return array|mixed
+     */
     public function detail($id)
     {
         $result = [];
         $aliService = Loader::model('\app\images\service\AliService', 'service');
         $model = new CustomersModel();
         $customer = $model->get($id);
+        if(!$customer){
+            return [FALSE,'找不到信息'];
+        }
+        $result = $customer->getData();
         if (!$customer) {
             return $result;
         }
-
         $residence = $customer->residence;
-        $design = $customer->design;
-        $result = $customer->getData();
+        if(!$residence){
+            return [FALSE,'楼盘信息出错'];
+        }
 
+        $regionService = Loader::model('\app\region\service\RegionService','service');
+        $provinceId = $regionService->switchToProvince($customer->region_id);
+        $cityId = $regionService->switchToCity($customer->region_id);
+        $result['region_id'] = [$provinceId,$cityId,(string)$customer->region_id];
+
+        $design = $customer->design;
         $result['house_name'] = isset($residence->name) ? $residence->name : '';
         $result['house_name'] .= isset($design->ridgepole) && isset($design->cell) ? $design->ridgepole . '栋' . $design->cell . '单元' : "";
 
@@ -287,6 +308,16 @@ class CustomersLogic extends MainLogic
             $images = $value->images;
             $result['records'][$key]['image'] = isset(current($images)['image_hash_code']) ? $aliService->getUrl(current($images)['image_hash_code']) : "";
         }
-        return $result;
+
+        //带上前段要用的两组数据
+        $residencesLogic = \think\Loader::model('\app\residences\logic\ResidencesLogic', "logic");
+        $listMenu = $residencesLogic->listMenu($customer->region_id);
+        $designLogic = \think\Loader::model('\app\residences\logic\ResidencesLogic','logic');
+        $listDesignsMenu = $designLogic->getDesignsMenu($customer->residence_id);
+
+        $result['residence_menu'] = $listMenu;
+        $result['design_menu'] = $listDesignsMenu[0]?$listDesignsMenu[2]:[];
+
+        return [TRUE,$result];
     }
 }

@@ -86,15 +86,18 @@ class Customers extends Basic
     {
         $params['phone'] = isset($this->phone) ? $this->phone : ""; //验证的地方进行了获取和赋值
         $params['id'] = $id;
-        $logic = Loader::model('CustomersLogic', 'logic');
+        return $this->process($params);
+    }
 
-        try {
-            $result = $logic->listByProcess($params);
-        } catch (\exception $e) {
-            ErrorLogLogic::save($e->getMessage());
-            return $this->showResponse(ResponseCode::UNKNOW_ERROR, '读取失败', [], array('status' => HeaderStatus::BADREQUEST));
-        }
-        return $this->showResponse(ResponseCode::SUCCESS, '读取成功', $result, array('status' => HeaderStatus::SUCCESS));
+    /**
+     * 邻居进度视觉
+     * @param string $id
+     * @return \think\response\Json
+     */
+    public function listProcessNeighbor($id = '')
+    {
+        $params['id'] = $id;
+        return $this->process($params);
     }
 
     /**
@@ -107,7 +110,11 @@ class Customers extends Basic
         try {
             $logic = Loader::model('CustomersLogic', 'logic');
             $result = $logic->detail($id);
-            return $this->showResponse(ResponseCode::SUCCESS, '', $result, array('status' => HeaderStatus::SUCCESS));
+            if($result[0]){
+                return $this->showResponse(ResponseCode::SUCCESS, '', $result[1], array('status' => HeaderStatus::SUCCESS));
+            }else{
+                return $this->showResponse(ResponseCode::SUCCESS, $result[2], [], array('status' => HeaderStatus::SUCCESS));
+            }
         } catch (\Exception $e) {
             return $this->showResponse(ResponseCode::UNKNOW_ERROR, '', [], array('status' => HeaderStatus::BADREQUEST));
         }
@@ -122,6 +129,23 @@ class Customers extends Basic
         } else {
             return $this->showResponse(ResponseCode::LOGIC_ERROR, $result[1], '', array('status' => HeaderStatus::BADREQUEST));
         }
+    }
+
+    /**
+     * @param $params
+     * @return \think\response\Json
+     */
+    protected function process($params)
+    {
+        $logic = Loader::model('CustomersLogic', 'logic');
+
+        try {
+            $result = $logic->listByProcess($params);
+        } catch (\exception $e) {
+            ErrorLogLogic::save($e->getMessage());
+            return $this->showResponse(ResponseCode::UNKNOW_ERROR, '读取失败', [], array('status' => HeaderStatus::BADREQUEST));
+        }
+        return $this->showResponse(ResponseCode::SUCCESS, '读取成功', $result, array('status' => HeaderStatus::SUCCESS));
     }
 
 

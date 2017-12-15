@@ -25,16 +25,17 @@ class CustomersRecordsModel extends BasicModel
     }
 
     /**
-     * 装修直播
+     * 根据residence_id查找
+     * 装修直播列表
      * @param $params
      * @return mixed
      */
     public function listByResidence($params)
     {
-        $sql = 'select re.*,resi.name,re.createtime,de.id,de.design_url from customers_records as re 
+        $sql = 'select re.*,resi.name as residence_name,re.createtime as createtime,de.ridgepole,de.cell,de.house_type,resi.photo_effects from customers_records as re 
         left join customers as cu on re.customers_id = cu.id
         left join residences as resi on resi.id = cu.residence_id 
-        left join residences_design as de on de.residences_id = resi.id 
+        left join residences_design as de on de.id = cu.design_id 
         where 1 and re.id is not null and re.is_delete =2 ';
         if($params['residence_id']){
             $sql .= '  and cu.residence_id = '.$params['residence_id'];

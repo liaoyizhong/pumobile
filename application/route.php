@@ -10,7 +10,7 @@
 // +----------------------------------------------------------------------
 
 return [
-    'login/check' => ['users/login/check',['method'=>'post']],
+
     //有增删查改动作的资源全部用restful
     '__rest__'=>[
         'regions' => ['region/region'], //区域
@@ -22,11 +22,12 @@ return [
     ],
 
     'sms-code' => ['admin/sms/save',['method'=>'post']],//登录验证码
-    'managers/login' => ['managers/login/save',['method'=>'post']], //管理员登录
+    'managers/login' => ['managers/login/save',['method'=>'post|options']], //管理员登录
 
-    'customers/login' => ['customers/login/save',['method'=>'post']], //客户员登录
+    'customers/login' => ['customers/login/save',['method'=>'post|options']], //客户员登录
     'customers/:id/process' => ['customers/customers/listProcess',['method'=>'get'],['id'=>'\d+']], //我家进度 业务视角指定 客户信息
-    'customers/process/' => ['customers/customers/listProcess',['method'=>'get']], //我家进度 业务视角
+    'customers/process' => ['customers/customers/listProcess',['method'=>'get']], //我家进度 业务视角
+    'customers/:id/neighbor' => ['customers/customers/listProcessNeighbor',['method'=>'get'],['id'=>'\d+']], //邻居进度 业务视角
     'customers/:id/residence' => ['customers/customersRecords/listResidence',['method'=>'get'],['id'=>'\d+']], //装修直播页面
     'customers/residence' => ['customers/customersRecords/listResidence',['method'=>'get'],['id'=>'\d+']], //装修直播页面返回全部
 

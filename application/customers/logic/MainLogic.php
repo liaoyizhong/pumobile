@@ -49,7 +49,7 @@ abstract class MainLogic extends BasicLogic
     }
 
     /**
-     * 获取"装修直播"、"我家进度"头部
+     * 获取"我家进度"头部
      * @return array
      */
     public function getTop($params = array())
@@ -60,7 +60,7 @@ abstract class MainLogic extends BasicLogic
             $design = $item->design;
             $residence = $item->residence;
             $topList[$key]['value'] = $item->id;
-            $topList[$key]['label'] = $bodyList[$key]['name'] = isset($residence)?$residence->name.$design->ridgepole.'栋'.$design->cell.'单元':"";
+            $topList[$key]['label'] = isset($residence)?$residence->name.$design->ridgepole.'栋'.$design->cell.'单元':"";
         }
         return $topList;
     }
