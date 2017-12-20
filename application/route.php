@@ -19,7 +19,14 @@ return [
         'customers-records' => ['customers/CustomersRecords'], //直播信息
         'residencesdesigns' => ['residences/ResidencesDesign'], //设计户型
         'images' => 'images/images', //图片
+        'visitors' => ['home/visitor'], //客户唯一
+        'wechats' => ['wechat/wechat'] //微信
     ],
+    'wechats/reception' => 'wechat/wechat/reception',
+    'wechats/oauthCallback' => ['wechat/wechat/oauthCallback',['method'=>'post|get']],
+    'wechats/oauthStart' => ['wechat/wechat/oauthCallback',['method'=>'post|get']],
+    'test/oauthStart' => 'wechat/test/oauthStart',
+    'test/oauthCallback' => 'wechat/test/oauthCallback',
 
     'sms-code' => ['admin/sms/save',['method'=>'post']],//登录验证码
     'managers/login' => ['managers/login/save',['method'=>'post|options']], //管理员登录

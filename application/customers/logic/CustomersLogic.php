@@ -184,15 +184,16 @@ class CustomersLogic extends MainLogic
         $topList = $this->getTop(array("phone" => $params["phone"]));
 
         $list = $this->listModels($params);
-
         $AliService = new AliService();
         $time = time();
         foreach ($list as $key => $value) {
             $design = $value->design;
             $residence = $value->residence;
             $records = $value->records;
+            $bodyList[$key]['residence_id'] = $residence->id;
             $bodyList[$key]['name'] = isset($residence->name) ? $residence->name : "";
             $bodyList[$key]['name'] .= isset($design->ridgepole) && isset($design->cell) ? $design->ridgepole . '栋' . $design->cell . '单元' : "";
+            $bodyList[$key]['name'] .= isset($design->house_type)?$design->house_type:"";
             $startTimeStamp = strtotime($value->starttime);
             $endTimeStamp = strtotime($value->endtime);
 
@@ -235,9 +236,61 @@ class CustomersLogic extends MainLogic
         return ['top' => $topList, 'body' => $bodyList];
     }
 
-    public function listByNeighbor()
+    public function listByNeighbor($params)
     {
+        $bodyList = [];
 
+        $list = $this->listModels($params);
+        $AliService = new AliService();
+        $time = time();
+        foreach ($list as $key => $value) {
+            $design = $value->design;
+            $residence = $value->residence;
+            $records = $value->records;
+            $bodyList['name'] = isset($residence->name) ? $residence->name : "";
+            $bodyList['title'] = isset($design->ridgepole) && isset($design->cell) ? $design->ridgepole . '栋' . $design->cell . '单元' : "";
+            $bodyList['title'] .= isset($design->house_type)?$design->house_type:"";
+            $bodyList['name'] .= $bodyList['title'];
+            $startTimeStamp = strtotime($value->starttime);
+            $endTimeStamp = strtotime($value->endtime);
+
+            $bodyList['starttime_text'] = date("m.d", $startTimeStamp) . '开工';
+            $bodyList['endtime_text'] = date("m.d", $endTimeStamp) . '验收';
+
+            $bodyList['time_span'] = ($endTimeStamp - $startTimeStamp) / 86400;
+            if ($time < $startTimeStamp) {
+                $bodyList['time_percentage'] = 0;
+                $bodyList['process_text'] = '未开始';
+            } elseif ($time > $endTimeStamp) {
+                $bodyList['time_percentage'] = 100;
+                $bodyList['process_text'] = '已完成';
+            } else {
+                $bodyList['time_percentage'] = round(((($time - $startTimeStamp) / 86400) / $bodyList['time_span']) * 100);
+                $bodyList['process_text'] = '第' . ceil(($time - $startTimeStamp) / 86400) . '天';
+            }
+
+
+            $bodyList['record'] = [];
+            foreach ($records as $rekey => $item) {
+                $interval = (int)($time - strtotime($item->createtime));
+                if ($interval < 3600) {
+                    $lastTime = ceil($interval / 60) . '分钟前';
+                } elseif ($interval < 86400) {
+                    $lastTime = ceil($interval / 3600) . '小时前';
+                } else {
+                    $lastTime = ceil($interval / 86400) . '天前';
+                }
+                $images = $item->images;
+                $bodyList['record'][$rekey]['content'] = $item['content'];
+                $bodyList['record'][$rekey]['name'] = isset($residence->name) ? $residence->name : "";
+                $bodyList['record'][$rekey]['lastTime'] = $lastTime;
+                $bodyList['record'][$rekey]['images'] = [];
+                foreach ($images as $imKey => $imValue) {
+                    $bodyList['record'][$rekey]['images'][] = $AliService->getUrl($imValue['image_hash_code']);
+                }
+            }
+        }
+        return $bodyList;
     }
 
     public function read($id)
@@ -255,7 +308,7 @@ class CustomersLogic extends MainLogic
         $result = [];
         $aliService = Loader::model('\app\images\service\AliService', 'service');
         $model = new CustomersModel();
-        $customer = $model->get($id);
+        $customer = $model->where('id',$id)->where('is_delete','2')->find();
         if(!$customer){
             return [FALSE,'找不到信息'];
         }
@@ -276,6 +329,7 @@ class CustomersLogic extends MainLogic
         $design = $customer->design;
         $result['house_name'] = isset($residence->name) ? $residence->name : '';
         $result['house_name'] .= isset($design->ridgepole) && isset($design->cell) ? $design->ridgepole . '栋' . $design->cell . '单元' : "";
+        $result['house_name'] .= isset($design->house_type)?$design->house_type:"";
 
         $time = time();
         $startTimeStamp = strtotime($customer->starttime);

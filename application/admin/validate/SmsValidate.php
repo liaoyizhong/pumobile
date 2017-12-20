@@ -3,6 +3,7 @@
 namespace app\admin\validate;
 
 use app\customers\model\CustomersModel;
+use app\home\model\VisitorModel;
 use app\managers\model\ManagersModel;
 use think\Validate;
 
@@ -32,11 +33,6 @@ class SmsValidate extends Validate
             }
             return TRUE;
         }elseif($value == self::TYPECUSTOMER){
-            $model = new CustomersModel();
-            $isExist = $model->where('phone', $data['phone'])->where('is_delete', '2')->find();
-            if(!$isExist){
-                return '账号不正确';
-            }
             RETURN TRUE;
         }else{
             return '不正确的类型';

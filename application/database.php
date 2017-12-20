@@ -13,17 +13,17 @@ return [
     // 数据库类型
     'type'            => 'mysql',
     // 服务器地址
-//    'hostname'        => 'pu.lubanfenqi.com',
-    'hostname'        => 'localhost',
+    'hostname'        => 'pu.lubanfenqi.com',
+//    'hostname'        => 'localhost',
     // 数据库名
     'database'        => 'xiaopu',
     // 用户名
-//    'username'        => 'remote_xiaopu',
-    'username'        => 'root',
+    'username'        => 'remote_xiaopu',
+//    'username'        => 'root',
 //    'username'        => 'puhome',
     // 密码
-//    'password'        => '#abdc112@)',
-    'password'        => '123456',
+    'password'        => '#abdc112@)',
+//    'password'        => '123456',
 //    'password'        => '#123(~1120abc', //错误
     // 端口
     'hostport'        => '',

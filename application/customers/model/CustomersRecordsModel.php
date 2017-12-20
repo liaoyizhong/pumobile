@@ -32,7 +32,7 @@ class CustomersRecordsModel extends BasicModel
      */
     public function listByResidence($params)
     {
-        $sql = 'select re.*,resi.name as residence_name,re.createtime as createtime,de.ridgepole,de.cell,de.house_type,resi.photo_effects from customers_records as re 
+        $sql = 'select re.*,cu.family_name as family_name, cu.sex as sex,resi.name as residence_name,re.createtime as createtime,de.ridgepole,de.cell,de.house_type,resi.photo_effects from customers_records as re 
         left join customers as cu on re.customers_id = cu.id
         left join residences as resi on resi.id = cu.residence_id 
         left join residences_design as de on de.id = cu.design_id 

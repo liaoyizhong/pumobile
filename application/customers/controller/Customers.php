@@ -97,6 +97,7 @@ class Customers extends Basic
     public function listProcessNeighbor($id = '')
     {
         $params['id'] = $id;
+        $params['neighbor'] = 1;
         return $this->process($params);
     }
 
@@ -138,9 +139,13 @@ class Customers extends Basic
     protected function process($params)
     {
         $logic = Loader::model('CustomersLogic', 'logic');
-
+        
         try {
-            $result = $logic->listByProcess($params);
+            if(isset($params['neighbor']) && $params['neighbor']){
+                $result = $logic->listByNeighbor($params);
+            }else{
+                $result = $logic->listByProcess($params);
+            }
         } catch (\exception $e) {
             ErrorLogLogic::save($e->getMessage());
             return $this->showResponse(ResponseCode::UNKNOW_ERROR, '读取失败', [], array('status' => HeaderStatus::BADREQUEST));

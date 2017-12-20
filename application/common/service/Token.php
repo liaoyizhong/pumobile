@@ -46,7 +46,8 @@ abstract class Token
     /**
      * 重新刷新Token
      *
-     * @param $uid 用户ID
+     * @param $uid
+     * @param $scope
      * @return mixed
      */
     abstract public function refreshToken($uid);
@@ -59,7 +60,40 @@ abstract class Token
      * @throws ForbiddenException
      * @throws TokenException
      */
-    abstract public function verifyToken($token = '');
+    //abstract public function verifyToken($token = '');
+
+    /**
+     * 校验Token是否合法
+     *
+     * @param string $token
+     * @return mixed|object|string
+     * @throws ForbiddenException
+     * @throws TokenException
+     */
+    public function verifyToken($token = '')
+    {
+        if (!is_array($token)) {
+            throw new TokenException([
+                'msg' => '无效Token'
+            ]);
+        }
+
+        if (!array_key_exists('uid', $token)) {
+            throw new TokenException([
+                'msg' => '无效Token'
+            ]);
+        }
+
+        if (!array_key_exists('scope', $token)) {
+            throw new TokenException([
+                'msg' => '无效Token'
+            ]);
+        }
+
+        $this->verifyNonce($token); // 仅判断
+
+        return $token;
+    }
 
     /**
      * 封装Token值
@@ -108,11 +142,33 @@ abstract class Token
         }
 
         try {
+
             $jwt = JWT::decode($token, $this->secret_key, array('HS256'));
-        } catch (\Exception $e) {
-            return $e->getMessage();
+
+            if (empty($jwt)) {
+                throw new TokenException();
+            }
+
+            $jwt = (array)$jwt;
+
+        } catch (ExpiredException $e) {
+            throw new TokenException([
+                'msg' => 'Token已过期或无效Token'
+            ]);
+        } catch (\UnexpectedValueException $e) {
+            throw new TokenException([
+                'msg' => '无效Token'
+            ]);
+        } catch (SignatureInvalidException $e) {
+            throw new TokenException([
+                'msg' => '无效Token'
+            ]);
+        } catch (BeforeValidException $e) {
+            throw new TokenException([
+                'msg' => '无效Token'
+            ]);
         }
-        
+
         return $jwt;
     }
 
@@ -126,7 +182,7 @@ abstract class Token
     public function getCurrentTokenByKey($key = '')
     {
         $tokenValues = $this->verifyJWT();
-        
+
         if (empty($tokenValues)) {
             throw new TokenException();
         }
@@ -178,9 +234,12 @@ abstract class Token
                 'msg' => '无效Token'
             ]);
         } else {
-            if($use) {
+            if ($use) {
                 // 标识已使用
-                Cache::set($nonceStr, 1, $this->expires_in);
+                $result = Cache::set($nonceStr, 1, $this->expires_in);
+                if (!$result) {
+                    throw new \Exception('服务器缓存异常');
+                }
             }
         }
 

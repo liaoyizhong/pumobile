@@ -10,6 +10,7 @@ namespace app\customers\logic;
 use app\common\logic\BasicLogic;
 use app\customers\model\CustomersRecordsImagesModel;
 use app\customers\model\CustomersRecordsModel;
+use app\images\factory\ImagesFactory;
 use app\residences\model\ResidencesDesignImagesModel;
 use app\residences\model\ResidencesModel;
 use think\Loader;
@@ -32,6 +33,7 @@ class CustomersRecordsLogic extends MainLogic
     public function listByResidence($params)
     {
         $bodyList = $topList = [];
+        $aliService = ImagesFactory::createImage();
         $residenceModel = new ResidencesModel();
         $residenceList = $residenceModel->where('is_delete','2')->select();
         foreach ($residenceList as $key => $item) {
@@ -48,6 +50,8 @@ class CustomersRecordsLogic extends MainLogic
 
         $time = time();
         foreach ($list as $key => $item) {
+            $bodyList[$key]['customer_name'] = $item['family_name'];
+            $bodyList[$key]['customer_name'] .= $item['sex'] == 1 ? "先生":"女士";
             $bodyList[$key]['content'] = $item['content'];
             $bodyList[$key]['customer_id'] = $item['customers_id'];
             $bodyList[$key]['residence_name'] = $item['residence_name'];
@@ -66,10 +70,10 @@ class CustomersRecordsLogic extends MainLogic
                 $bodyList[$key]['last_time_text'] = round($last/86400).'天';
             }
 
-            $bodyList[$key]['image_hash_code'] = [];
+            $bodyList[$key]['image_url'] = [];
             foreach ($imageList as $imKey => $imitem) {
                 if ($imitem->customers_records_id == $item['id']) {
-                    $bodyList[$key]['image_hash_code'][] = $imitem->image_hash_code;
+                    $bodyList[$key]['image_url'][] = $aliService->getUrl($imitem->image_hash_code);
                 }
             }
         }
@@ -96,6 +100,7 @@ class CustomersRecordsLogic extends MainLogic
             $design = $customer->design;
             $result['name'] = isset($residence->name)?$residence->name:"";
             $result['name'] .= isset($design->ridgepole) && isset($design->cell)?$design->ridgepole.'栋'.$design->cell.'单元':"";
+            $result['name'] .= isset($design->house_type)?$design->house_type:"";
         }else{
             $result['name'] = '';
         }
